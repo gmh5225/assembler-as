@@ -91,6 +91,19 @@ void Parser::buildMov() {
                 writeRROperand(3, src.type, dest.type);
             } break;
             
+            case Rax:
+            case Rcx:
+            case Rdx:
+            case Rbx:
+            case Rsp:
+            case Rbp:
+            case Rsi:
+            case Rdi: {
+                file->addCode8(0x48);
+                file->addCode8(0x89);
+                writeRROperand(3, src.type, dest.type);
+            } break;
+            
             case Int32: {
                 switch (dest.type) {
                     case Eax: file->addCode8(0xB8); break;

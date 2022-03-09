@@ -173,6 +173,23 @@ void SymbolParser::parseMov() {
             location += 2;
         } break;
         
+        case Rax:
+        case Rbx:
+        case Rcx:
+        case Rdx:
+        case Rsp:
+        case Rbp:
+        case Rsi:
+        case Rdi: {
+            if (destMemory) break;
+            if (regSize != 64) {
+                std::cerr << "Error: Invalid mov. Expected 64-bit destination." << std::endl;
+                return;
+            }
+            
+            location += 3;
+        } break;
+        
         case Int32: {
             if (destMemory) {
                 location += 4;
