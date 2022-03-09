@@ -18,7 +18,8 @@ private:
     
     // Private functions
     void parseText();
-    void buildMov();
+    void buildPush();
+    void buildStdInstr(TokenType op);
     void writeRROperand(uint8_t prefix, TokenType src, TokenType dest);
     void writeDspOperand(uint8_t size, TokenType base, TokenType regOffset, int offset);
     uint8_t getRegisterValue(TokenType reg);

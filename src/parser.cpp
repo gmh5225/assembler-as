@@ -24,7 +24,10 @@ void Parser::parseText() {
     while (token.type != Eof) {
         switch (token.type) {
             // Complicated instructions
-            case Mov: buildMov(); break;
+            case Push: buildPush(); break;
+            
+            case Xor:
+            case Mov: buildStdInstr(token.type); break;
             
             // Simple instructions
             case Syscall: {
@@ -41,7 +44,24 @@ void Parser::parseText() {
     }
 }
 
-void Parser::buildMov() {
+void Parser::buildPush() {
+    Token reg = scanner->getNext();
+    
+    switch (reg.type) {
+        case Rax: file->addCode8(0x50); break;
+        case Rcx: file->addCode8(0x51); break;
+        case Rdx: file->addCode8(0x52); break;
+        case Rbx: file->addCode8(0x53); break;
+        case Rsp: file->addCode8(0x54); break;
+        case Rbp: file->addCode8(0x55); break;
+        case Rsi: file->addCode8(0x56); break;
+        case Rdi: file->addCode8(0x57); break;
+        
+        default: {}
+    }
+}
+
+void Parser::buildStdInstr(TokenType op) {
     Token dest = scanner->getNext();
     
     // Build memory destinations
@@ -87,7 +107,9 @@ void Parser::buildMov() {
             case Ebp:
             case Esi:
             case Edi: {
-                file->addCode8(0x89);
+                if (op == Mov) file->addCode8(0x89);
+                else if (op == Xor) file->addCode8(0x31);
+                
                 writeRROperand(3, src.type, dest.type);
             } break;
             
@@ -100,7 +122,9 @@ void Parser::buildMov() {
             case Rsi:
             case Rdi: {
                 file->addCode8(0x48);
-                file->addCode8(0x89);
+                if (op == Mov) file->addCode8(0x89);
+                else if (op == Xor) file->addCode8(0x31);
+                
                 writeRROperand(3, src.type, dest.type);
             } break;
             

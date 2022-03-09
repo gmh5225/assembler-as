@@ -38,11 +38,22 @@ void SymbolParser::parseText() {
     while (token.type != Eof) {
         switch (token.type) {
             // Instructions that require further disection
+            case Xor:
             case Mov: parseMov(); break;
             
             // Instructions where we know the size right off
             case Syscall: location += 2; break;
             case Ret: location += 1; break;
+            
+            case Push: {
+                token = scanner->getNext();
+                if (getRegSize(token.type) != 64) {
+                    std::cerr << "Error: Expected 64-bit register with push." << std::endl;
+                    return;
+                }
+                
+                location += 1;
+            } break;
             
             // ID value- we found a label
             case Id: {

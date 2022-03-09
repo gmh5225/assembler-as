@@ -2,6 +2,8 @@
 "mov" = Mov
 "syscall" = Syscall
 "ret" = Ret
+"push" = Push
+"xor" = Xor
 
 "eax" = Eax
 "ebx" = Ebx

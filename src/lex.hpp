@@ -12,6 +12,8 @@ enum TokenType {
     Mov,
     Syscall,
     Ret,
+    Push,
+    Xor,
     Eax,
     Ebx,
     Ecx,
