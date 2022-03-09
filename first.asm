@@ -2,6 +2,7 @@
 .data
 
 .text
+.global _start
 _start:
     mov eax, 60
     mov edi, 10

@@ -5,22 +5,22 @@
 
 int main(int argc, char *argv[]) {
     Elf64File file("first.bin");
-    file.addFunctionSymbol("_start", 0, true);
+    //file.addFunctionSymbol("_start", 0, true);
     
     // Write some code:
     //-- mov eax, 60
     //-- mov edi, 6
     //-- syscall
-    file.addCode8(0xB8);
+    /*file.addCode8(0xB8);
     file.addCode32(60);
     
     file.addCode8(0xBF);
     file.addCode32(5);
     
     file.addCode8(0x0F);
-    file.addCode8(0x05);
+    file.addCode8(0x05);*/
     
-    file.write();
+    
     
     // Test out our symbol parser
     SymbolParser symparse("./first.asm");
@@ -29,6 +29,15 @@ int main(int argc, char *argv[]) {
     for (auto const &x : symbols->locations) {
         std::cout << x.first << " -> " << x.second << std::endl;
     }
+    
+    for (auto sym : symbols->global) {
+        std::cout << "GLOBAL: " << sym << std::endl;
+    }
+    
+    symparse.processSymbols(&file);
+    
+    // Write out the file
+    file.write();
     
     return 0;
 }

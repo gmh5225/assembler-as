@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include "symbol.hpp"
 
@@ -20,6 +21,18 @@ Symbols *SymbolParser::getSymbols() {
     return symbols;
 }
 
+//
+// Adds symbols to the ELF file
+//
+void SymbolParser::processSymbols(Elf64File *file) {
+    for (auto const &x : symbols->locations) {
+        bool isGlobal = false;
+        if (std::find(symbols->global.begin(), symbols->global.end(), x.first) != symbols->global.end())
+            isGlobal = true;
+        file->addFunctionSymbol(x.first, x.second, isGlobal);
+    }
+}
+
 void SymbolParser::parseText() {
     Token token = scanner->getNext();
     while (token.type != Eof) {
@@ -34,6 +47,20 @@ void SymbolParser::parseText() {
             // ID value- we found a label
             case Id: {
                 std::string name = token.id_val;
+                
+                // First, check for directives
+                if (name == ".global") {
+                    token = scanner->getNext();
+                    if (token.type != Id) {
+                        std::cerr << "Error: Expected name after global." << std::endl;
+                        return;
+                    }
+                    
+                    symbols->global.push_back(token.id_val);
+                    break;
+                }
+                
+                // Otherwise, we probably have a symbol
                 token = scanner->getNext();
                 if (token.type != Colon) {
                     std::cerr << "Error: Expected : after label name." << std::endl;

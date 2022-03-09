@@ -14,9 +14,9 @@ Elf64File::Elf64File(std::string name) {
     header->e_ident[4] = 2;
     header->e_ident[5] = 1;
     header->e_ident[6] = 1;
-    header->e_ident[7] = 3;
-    header->e_ident[8] = 1;
-    for (int i = 9; i<EI_NIDENT; i++) header->e_ident[i] = 0;
+    //header->e_ident[7] = 3;
+    //header->e_ident[8] = 1;
+    for (int i = 7; i<EI_NIDENT; i++) header->e_ident[i] = 0;
     
     header->e_type = 1;
     header->e_machine = 62;
@@ -77,7 +77,8 @@ Elf64File::Elf64File(std::string name) {
     data->header->sh_name = getSectionNamePos(".data");
     data->header->sh_type = 1;          // SHT_PROGBITS
     data->header->sh_flags = 3;         // SHF_WRITE | SHF_ALLOC
-    data->header->sh_addralign = 4;
+    //data->header->sh_addralign = 4;
+    data->header->sh_addralign = 1;
     
     sections.push_back(data->header);
     data->index = sections.size() - 1;
@@ -92,7 +93,7 @@ Elf64File::Elf64File(std::string name) {
     text->header->sh_name = getSectionNamePos(".text");
     text->header->sh_type = 1;          // SHT_PROGBITS
     text->header->sh_flags = 6;         // SHF_WRITE | SHF_ALLOC
-    text->header->sh_addralign = 16;
+    text->header->sh_addralign = 1;
     
     sections.push_back(text->header);
     text->index = sections.size() - 1;
@@ -110,7 +111,8 @@ Elf64File::Elf64File(std::string name) {
     symtab->header->sh_addr = 0;
     symtab->header->sh_link = strtab->index;        // Connects to .strtab
     symtab->header->sh_info = 0;                    // Elf64_Word(start_pos)
-    symtab->header->sh_addralign = text->index;     // Connects to .text
+    //symtab->header->sh_addralign = text->index;     // Connects to .text
+    symtab->header->sh_addralign = 8;
     symtab->header->sh_entsize = sizeof(Elf64_Sym);
     sections.push_back(symtab->header);
     
@@ -131,7 +133,7 @@ Elf64File::Elf64File(std::string name) {
     dataSym->st_shndx = data->index;
     symtab->symbols.push_back(dataSym);
     
-    Elf64_Sym *textSym = new Elf64_Sym;
+    textSym = new Elf64_Sym;
     textSym->st_info = 3;                   // STB_LOCAL, STT_SECTION
     textSym->st_shndx = text->index;
     symtab->symbols.push_back(textSym);
@@ -165,10 +167,20 @@ void Elf64File::write() {
     codeOffset += size;
     
     // -> symtab
+    symtabSort();
     size = sizeof(Elf64_Sym) * symtab->symbols.size();
     symtab->header->sh_offset = Elf64_Off(codeOffset);
     symtab->header->sh_size = Elf64_Xword(size);
     codeOffset += size;
+    
+    int startPos = getStringPos("_start");
+    for (int i = 0; i<symtab->symbols.size(); i++) {
+        auto sym = symtab->symbols.at(i);
+        if (sym->st_name == startPos) {
+            symtab->header->sh_info = i;
+            break;
+        }
+    }
     
     // -> data
     size = data->data.size();
@@ -222,15 +234,11 @@ void Elf64File::addFunctionSymbol(std::string name, int location, bool isGlobal)
     
     Elf64_Sym *symbol = new Elf64_Sym;
     symbol->st_name = pos;
-    symbol->st_info = 16;               // STB_GLOBAL, STT_NOTYPE ; TODO: Add local
+    if (isGlobal) symbol->st_info = ELF64_ST_INFO(STB_GLOBAL, STT_NOTYPE);
+    else symbol->st_info = ELF64_ST_INFO(STB_LOCAL, STT_NOTYPE);
     symbol->st_shndx = text->index;
     symbol->st_value = Elf64_Addr(location);
     symtab->symbols.push_back(symbol);
-    
-    if (name == "_start") {
-        pos = symtab->symbols.size() - 1;
-        symtab->header->sh_info = pos;
-    }
 }
 
 void Elf64File::addCode8(uint8_t code) {
@@ -264,5 +272,18 @@ int Elf64File::getStringPos(std::string name) {
     }
     
     return pos;
+}
+
+void Elf64File::symtabSort() {
+    std::vector<Elf64_Sym *> local, global;
+    
+    for (auto sym : symtab->symbols) {
+        if (ELF64_ST_BIND(sym->st_info) == STB_GLOBAL) global.push_back(sym);
+        else local.push_back(sym);
+    }
+    
+    symtab->symbols.clear();
+    for (auto sym : local) symtab->symbols.push_back(sym);
+    for (auto sym : global) symtab->symbols.push_back(sym);
 }
 

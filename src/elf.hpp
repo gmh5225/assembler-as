@@ -19,6 +19,23 @@ typedef Elf64_Half Elf64_Versym;
 
 #define SHN_ABS 65521
 
+#define ELF32_ST_BIND(val)		(((unsigned char) (val)) >> 4)
+#define ELF32_ST_TYPE(val)		((val) & 0xf)
+#define ELF32_ST_INFO(bind, type)	(((bind) << 4) + ((type) & 0xf))
+
+/* Both Elf32_Sym and Elf64_Sym use the same one-byte st_info field.  */
+#define ELF64_ST_BIND(val)		ELF32_ST_BIND (val)
+#define ELF64_ST_TYPE(val)		ELF32_ST_TYPE (val)
+#define ELF64_ST_INFO(bind, type)	ELF32_ST_INFO ((bind), (type))
+
+#define STB_LOCAL	0		/* Local symbol */
+#define STB_GLOBAL	1		/* Global symbol */
+#define STT_NOTYPE	0		/* Symbol type is unspecified */
+#define STT_OBJECT	1		/* Symbol is a data object */
+#define STT_FUNC	2		/* Symbol is a code object */
+#define STT_SECTION	3		/* Symbol associated with a section */
+#define STT_FILE	4		/* Symbol's name is file name */
+
 // Raw ELF64 headers
 // These can be directly written to a binary file
 //
@@ -106,6 +123,7 @@ private:
     // Utility functions
     int getSectionNamePos(std::string name);
     int getStringPos(std::string name);
+    void symtabSort();
     
     // Variables
     std::string name = "";
@@ -117,6 +135,7 @@ private:
     ElfSymTable *symtab;
     ElfData *data;
     ElfText *text;
+    Elf64_Sym *textSym;
     
     std::vector<Elf64_Shdr *> sections;
 };
