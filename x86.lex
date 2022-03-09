@@ -12,6 +12,12 @@
 "esi" = Esi
 "edi" = Edi
 
+"dword" = DWORD
+"ptr" = PTR
+
 ':' = Colon
 ',' = Comma
+'[' = LBrace
+']' = RBrace
+'-' = Minus
 

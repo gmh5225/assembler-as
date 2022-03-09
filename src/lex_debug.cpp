@@ -18,8 +18,13 @@ void Token::print() {
         case Ebp: std::cout << "ebp" << std::endl; break;
         case Esi: std::cout << "esi" << std::endl; break;
         case Edi: std::cout << "edi" << std::endl; break;
+        case DWORD: std::cout << "dword" << std::endl; break;
+        case PTR: std::cout << "ptr" << std::endl; break;
         case Colon: std::cout << ":" << std::endl; break;
         case Comma: std::cout << "," << std::endl; break;
+        case LBrace: std::cout << "[" << std::endl; break;
+        case RBrace: std::cout << "]" << std::endl; break;
+        case Minus: std::cout << "-" << std::endl; break;
         
         case Id: std::cout << "ID(" << id_val << ")" << std::endl; break;
         case String: std::cout << "STR(" << id_val << ")" << std::endl; break;

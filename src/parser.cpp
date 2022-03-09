@@ -42,11 +42,11 @@ void Parser::parseText() {
 }
 
 void Parser::buildMov() {
-    Token src = scanner->getNext();
-    scanner->getNext();
     Token dest = scanner->getNext();
+    scanner->getNext();
+    Token src = scanner->getNext();
     
-    switch (dest.type) {
+    switch (src.type) {
         case Eax:
         case Ecx:
         case Edx:
@@ -60,7 +60,7 @@ void Parser::buildMov() {
         } break;
         
         case Int32: {
-            switch (src.type) {
+            switch (dest.type) {
                 case Eax: file->addCode8(0xB8); break;
                 case Ecx: file->addCode8(0xB9); break;
                 case Edx: file->addCode8(0xBA); break;
@@ -73,7 +73,7 @@ void Parser::buildMov() {
                 default: {}
             }
             
-            file->addCode32(dest.i32_val);
+            file->addCode32(src.i32_val);
         } break;
         
         // TODO: Others
@@ -82,7 +82,7 @@ void Parser::buildMov() {
 
 // Builds a register-register operand
 //
-// Encoding: <prefix: 0-3> <dest> <src>
+// Encoding: <prefix: 0-3> <src> <dest>
 //
 void Parser::writeRROperand(uint8_t prefix, TokenType src, TokenType dest) {
     uint8_t srcReg = getRegisterValue(src);
@@ -94,10 +94,10 @@ void Parser::writeRROperand(uint8_t prefix, TokenType src, TokenType dest) {
     output |= (prefix << 6);
     
     output &= 0b11000111;
-    output |= (destReg << 3);
+    output |= (srcReg << 3);
     
     output &= 0b11111000;
-    output |= srcReg;
+    output |= destReg;
     
     file->addCode8(output);
 }

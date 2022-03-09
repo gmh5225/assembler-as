@@ -97,10 +97,52 @@ void SymbolParser::parseText() {
 //
 void SymbolParser::parseMov() {
     Token token = scanner->getNext();
-    int regSize = getRegSize(token.type);
-    if (regSize == -1) {
-        std::cerr << "Error: Invalid register in mov." << std::endl;
-        return;
+    int regSize = 0;
+    bool destMemory = false;
+    
+    switch (token.type) {
+        case DWORD: {
+            token = scanner->getNext();
+            token = scanner->getNext();
+            if (token.type != LBrace) {
+                std::cerr << "Error: Expected opening \'[\'." << std::endl;
+                return;
+            }
+            
+            token = scanner->getNext();
+            if (getRegSize(token.type) == -1) {
+                std::cerr << "Error: Expected base register." << std::endl;
+                return;
+            }
+            
+            token = scanner->getNext();
+            if (token.type == RBrace) break;
+            
+            token = scanner->getNext();
+            if (token.type != Int32 && getRegSize(token.type) == -1) {
+                std::cerr << "Error: Unknown token in address." << std::endl;
+                return;
+            }
+            
+            token = scanner->getNext();
+            if (token.type != RBrace) {
+                std::cerr << "Error: Expected closing brace in memory reference." << std::endl;
+                return;
+            }
+            
+            // In most cases, memory moves are the same size unless we are moving an immediate
+            destMemory = true;
+            location += 3;
+        } break;
+    
+        // Default to a register
+        default: {
+            regSize = getRegSize(token.type);
+            if (regSize == -1) {
+                std::cerr << "Error: Invalid register in mov." << std::endl;
+                return;
+            }
+        }
     }
     
     // Next token should always be a comma
@@ -121,6 +163,7 @@ void SymbolParser::parseMov() {
         case Ebp:
         case Esi:
         case Edi: {
+            if (destMemory) break;
             if (regSize != 32) {
                 std::cerr << "Error: Invalid mov. Expected 32-bit destination." << std::endl;
                 return;
@@ -130,10 +173,14 @@ void SymbolParser::parseMov() {
         } break;
         
         case Int32: {
-            if (regSize == 8) location += 2;
-            else if (regSize == 16) location += 4;
-            else if (regSize == 32) location += 5;
-            else if (regSize == 64) location += 7;
+            if (destMemory) {
+                location += 4;
+            } else {
+                if (regSize == 8) location += 2;
+                else if (regSize == 16) location += 4;
+                else if (regSize == 32) location += 5;
+                else if (regSize == 64) location += 7;
+            }
         } break;
         
         default: {

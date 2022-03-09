@@ -176,6 +176,9 @@ bool Scanner::isSymbol(char c) {
         //case ';':
         case ':': return true;
         case ',': return true;
+        case '[': return true;
+        case ']': return true;
+        case '-': return true;
         
         default: return false;
     }
@@ -195,6 +198,8 @@ TokenType Scanner::getKeyword() {
     else if (buffer == "ebp") return Ebp;
     else if (buffer == "esi") return Esi;
     else if (buffer == "edi") return Edi;
+    else if (buffer == "dword") return DWORD;
+    else if (buffer == "ptr") return PTR;
     return EmptyToken;
 }
 
@@ -202,6 +207,9 @@ TokenType Scanner::getSymbol(char c) {
     switch (c) {
         case ':': return Colon;
         case ',': return Comma;
+        case '[': return LBrace;
+        case ']': return RBrace;
+        case '-': return Minus;
         default: return EmptyToken;
     }
     return EmptyToken;

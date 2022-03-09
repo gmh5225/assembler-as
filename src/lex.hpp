@@ -20,8 +20,13 @@ enum TokenType {
     Ebp,
     Esi,
     Edi,
+    DWORD,
+    PTR,
     Colon,
     Comma,
+    LBrace,
+    RBrace,
+    Minus,
     
     // Literals
     Id,
