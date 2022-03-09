@@ -191,6 +191,8 @@ TokenType Scanner::getKeyword() {
     else if (buffer == "ebx") return Ebx;
     else if (buffer == "ecx") return Ecx;
     else if (buffer == "edx") return Edx;
+    else if (buffer == "esp") return Esp;
+    else if (buffer == "ebp") return Ebp;
     else if (buffer == "esi") return Esi;
     else if (buffer == "edi") return Edi;
     return EmptyToken;

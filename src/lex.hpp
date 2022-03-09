@@ -16,6 +16,8 @@ enum TokenType {
     Ebx,
     Ecx,
     Edx,
+    Esp,
+    Ebp,
     Esi,
     Edi,
     Colon,

@@ -7,6 +7,8 @@
 "ebx" = Ebx
 "ecx" = Ecx
 "edx" = Edx
+"esp" = Esp
+"ebp" = Ebp
 "esi" = Esi
 "edi" = Edi
 

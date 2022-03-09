@@ -14,6 +14,8 @@ void Token::print() {
         case Ebx: std::cout << "ebx" << std::endl; break;
         case Ecx: std::cout << "ecx" << std::endl; break;
         case Edx: std::cout << "edx" << std::endl; break;
+        case Esp: std::cout << "esp" << std::endl; break;
+        case Ebp: std::cout << "ebp" << std::endl; break;
         case Esi: std::cout << "esi" << std::endl; break;
         case Edi: std::cout << "edi" << std::endl; break;
         case Colon: std::cout << ":" << std::endl; break;

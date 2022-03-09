@@ -2,9 +2,10 @@
 
 #include "elf.hpp"
 #include "symbol.hpp"
+#include "parser.hpp"
 
 int main(int argc, char *argv[]) {
-    Elf64File file("first.bin");
+    Elf64File *file = new Elf64File("first.bin");
     //file.addFunctionSymbol("_start", 0, true);
     
     // Write some code:
@@ -34,10 +35,13 @@ int main(int argc, char *argv[]) {
         std::cout << "GLOBAL: " << sym << std::endl;
     }
     
-    symparse.processSymbols(&file);
+    symparse.processSymbols(file);
+    
+    Parser parser("./first.asm", file, symbols);
+    parser.build();
     
     // Write out the file
-    file.write();
+    file->write();
     
     return 0;
 }
