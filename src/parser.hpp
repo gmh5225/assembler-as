@@ -19,5 +19,7 @@ private:
     // Private functions
     void parseText();
     void buildMov();
+    void writeRROperand(uint8_t prefix, TokenType src, TokenType dest);
+    uint8_t getRegisterValue(TokenType reg);
 };
 
