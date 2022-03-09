@@ -7,7 +7,6 @@ void Token::print() {
         case EmptyToken: std::cout << "???" << std::endl; break;
         case Eof: std::cout << "EOF" << std::endl; break;
         
-        case Section: std::cout << "section" << std::endl; break;
         case Mov: std::cout << "mov" << std::endl; break;
         case Syscall: std::cout << "syscall" << std::endl; break;
         case Ret: std::cout << "ret" << std::endl; break;

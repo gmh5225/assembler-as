@@ -1,6 +1,4 @@
 
-"section" = Section
-
 "mov" = Mov
 "syscall" = Syscall
 "ret" = Ret

@@ -9,7 +9,6 @@ enum TokenType {
     EmptyToken,
     Eof,
     
-    Section,
     Mov,
     Syscall,
     Ret,
