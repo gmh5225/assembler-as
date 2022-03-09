@@ -153,7 +153,7 @@ void SymbolParser::parseMov() {
         return;
     }
     
-    // Now, the destination
+    // Now, the source
     token = scanner->getNext();
     switch (token.type) {
         case Eax:
@@ -182,6 +182,17 @@ void SymbolParser::parseMov() {
                 else if (regSize == 32) location += 5;
                 else if (regSize == 64) location += 7;
             }
+        } break;
+        
+        case LBrace: {
+            token = scanner->getNext();
+            while (token.type != RBrace) token = scanner->getNext();
+            
+            // TODO: Update accordingly
+            if (regSize == 8) location += 3;
+            else if (regSize == 16) location += 3;
+            else if (regSize == 32) location += 3;
+            else if (regSize == 64) location += 4;
         } break;
         
         default: {

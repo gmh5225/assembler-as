@@ -108,6 +108,30 @@ void Parser::buildMov() {
                 file->addCode32(src.i32_val);
             } break;
             
+            case LBrace: {
+                Token base = scanner->getNext();
+                int offset = 1;
+                
+                Token next = scanner->getNext();
+                if (next.type == RBrace) {
+                    // TODO... a whole other problem
+                }
+                
+                Token offsetToken = scanner->getNext();
+                if (isRegister(offsetToken.type)) {
+                    // TODO
+                } else if (offsetToken.type == Int32) {
+                    offset = offsetToken.i32_val;
+                    if (next.type == Minus) offset *= -1;
+                    
+                    scanner->getNext();                 // Consume ']'
+                    
+                    // Now, encode
+                    file->addCode8(0x8B);
+                    writeDspOperand(1, base.type, dest.type, offset);
+                }
+            } break;
+            
             // TODO: Others
         }
     }
