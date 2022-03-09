@@ -117,6 +117,8 @@ void SymbolParser::parseMov() {
         case Ebx:
         case Ecx:
         case Edx:
+        case Esp:
+        case Ebp:
         case Esi:
         case Edi: {
             if (regSize != 32) {
@@ -150,6 +152,8 @@ int SymbolParser::getRegSize(TokenType type) {
         case Ebx:
         case Ecx:
         case Edx:
+        case Esp:
+        case Ebp:
         case Esi:
         case Edi: return 32;
         
