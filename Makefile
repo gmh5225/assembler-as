@@ -3,12 +3,16 @@ CFLAGS=-g
 SRC=$(wildcard src/*.cpp)
 OBJS=$(addprefix build/,$(patsubst %.cpp, %.o, $(SRC)))
 
-all: check as
+all: check lex as
 
 .PHONY: check
 check:
 	if [ ! -d ./build ] ; then mkdir -p build; fi
 	if [ ! -d ./build/src ] ; then mkdir -p build/src; fi
+	
+.PHONY: lex
+lex:
+	minilex x86.lex ./src
 
 as: $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o build/as

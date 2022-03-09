@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "elf.hpp"
+#include "symbol.hpp"
 
 int main(int argc, char *argv[]) {
     Elf64File file("first.bin");
@@ -20,6 +21,14 @@ int main(int argc, char *argv[]) {
     file.addCode8(0x05);
     
     file.write();
+    
+    // Test out our symbol parser
+    SymbolParser symparse("./first.asm");
+    Symbols *symbols = symparse.getSymbols();
+    
+    for (auto const &x : symbols->locations) {
+        std::cout << x.first << " -> " << x.second << std::endl;
+    }
     
     return 0;
 }
