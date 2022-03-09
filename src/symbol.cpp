@@ -112,6 +112,7 @@ void SymbolParser::parseMov() {
             token = scanner->getNext();
             if (getRegSize(token.type) == -1) {
                 std::cerr << "Error: Expected base register." << std::endl;
+                token.print();
                 return;
             }
             
@@ -203,6 +204,15 @@ int SymbolParser::getRegSize(TokenType type) {
         case Ebp:
         case Esi:
         case Edi: return 32;
+        
+        case Rax:
+        case Rbx:
+        case Rcx:
+        case Rdx:
+        case Rsp:
+        case Rbp:
+        case Rsi:
+        case Rdi: return 64;
         
         default: return -1;
     }

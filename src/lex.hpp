@@ -20,6 +20,14 @@ enum TokenType {
     Ebp,
     Esi,
     Edi,
+    Rax,
+    Rbx,
+    Rcx,
+    Rdx,
+    Rsp,
+    Rbp,
+    Rsi,
+    Rdi,
     DWORD,
     PTR,
     Colon,
@@ -27,6 +35,7 @@ enum TokenType {
     LBrace,
     RBrace,
     Minus,
+    Plus,
     
     // Literals
     Id,

@@ -12,12 +12,22 @@
 "esi" = Esi
 "edi" = Edi
 
-"dword" = DWORD
-"ptr" = PTR
+"rax" = Rax
+"rbx" = Rbx
+"rcx" = Rcx
+"rdx" = Rdx
+"rsp" = Rsp
+"rbp" = Rbp
+"rsi" = Rsi
+"rdi" = Rdi
+
+"DWORD" = DWORD
+"PTR" = PTR
 
 ':' = Colon
 ',' = Comma
 '[' = LBrace
 ']' = RBrace
 '-' = Minus
+'+' = Plus
 

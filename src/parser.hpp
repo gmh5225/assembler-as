@@ -20,6 +20,8 @@ private:
     void parseText();
     void buildMov();
     void writeRROperand(uint8_t prefix, TokenType src, TokenType dest);
+    void writeDspOperand(uint8_t size, TokenType base, TokenType regOffset, int offset);
     uint8_t getRegisterValue(TokenType reg);
+    bool isRegister(TokenType reg);
 };
 

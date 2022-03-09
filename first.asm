@@ -4,5 +4,7 @@
 .text
 .global _start
 _start:
-    mov eax, 10
+    mov DWORD PTR [rbp-4], 10
+    syscall
+    
     
