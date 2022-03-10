@@ -169,6 +169,7 @@ void SymbolParser::parseStdInstr() {
     }
     
     // Now, the source
+    // IMPORTANT: All this needs to be update for extended registers
     token = scanner->getNext();
     switch (token.type) {
         case Eax:
@@ -203,7 +204,15 @@ void SymbolParser::parseStdInstr() {
         case Rsp:
         case Rbp:
         case Rsi:
-        case Rdi: {
+        case Rdi:
+        case R8:
+        case R9:
+        case R10:
+        case R11:
+        case R12:
+        case R13:
+        case R14:
+        case R15: {
             if (destMemory) break;
             if (regSize != 64) {
                 std::cerr << "Error: Invalid mov. Expected 64-bit destination." << std::endl;
@@ -271,7 +280,15 @@ int SymbolParser::getRegSize(TokenType type) {
         case Rsp:
         case Rbp:
         case Rsi:
-        case Rdi: return 64;
+        case Rdi:
+        case R8:
+        case R9:
+        case R10:
+        case R11:
+        case R12:
+        case R13:
+        case R14:
+        case R15: return 64;
         
         default: return -1;
     }

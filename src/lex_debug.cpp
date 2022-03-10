@@ -40,6 +40,14 @@ void Token::print() {
         case Rbp: std::cout << "rbp" << std::endl; break;
         case Rsi: std::cout << "rsi" << std::endl; break;
         case Rdi: std::cout << "rdi" << std::endl; break;
+        case R8: std::cout << "r8" << std::endl; break;
+        case R9: std::cout << "r9" << std::endl; break;
+        case R10: std::cout << "r10" << std::endl; break;
+        case R11: std::cout << "r11" << std::endl; break;
+        case R12: std::cout << "r12" << std::endl; break;
+        case R13: std::cout << "r13" << std::endl; break;
+        case R14: std::cout << "r14" << std::endl; break;
+        case R15: std::cout << "r15" << std::endl; break;
         case DWORD: std::cout << "DWORD" << std::endl; break;
         case PTR: std::cout << "PTR" << std::endl; break;
         case Colon: std::cout << ":" << std::endl; break;

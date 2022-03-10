@@ -34,6 +34,14 @@
 "rbp" = Rbp
 "rsi" = Rsi
 "rdi" = Rdi
+"r8" = R8
+"r9" = R9
+"r10" = R10
+"r11" = R11
+"r12" = R12
+"r13" = R13
+"r14" = R14
+"r15" = R15
 
 "DWORD" = DWORD
 "PTR" = PTR

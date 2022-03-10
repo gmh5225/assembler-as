@@ -221,6 +221,14 @@ TokenType Scanner::getKeyword() {
     else if (buffer == "rbp") return Rbp;
     else if (buffer == "rsi") return Rsi;
     else if (buffer == "rdi") return Rdi;
+    else if (buffer == "r8") return R8;
+    else if (buffer == "r9") return R9;
+    else if (buffer == "r10") return R10;
+    else if (buffer == "r11") return R11;
+    else if (buffer == "r12") return R12;
+    else if (buffer == "r13") return R13;
+    else if (buffer == "r14") return R14;
+    else if (buffer == "r15") return R15;
     else if (buffer == "DWORD") return DWORD;
     else if (buffer == "PTR") return PTR;
     return EmptyToken;

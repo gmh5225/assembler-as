@@ -102,22 +102,42 @@ void Parser::buildStdInstr(TokenType op) {
         scanner->getNext();
         Token src = scanner->getNext();
         
-        // Register-to-register instruction -> 32 bits
         switch (src.type) {
+            // Immediate-to-register
+            //
+            // This one is a pain because it varies for each register type
+            //
             case Int32: {
                 writeRexPrefix(EmptyToken, dest.type);
                 
-                switch (dest.type) {
-                    case Eax: case R8d: file->addCode8(0xB8); break;
-                    case Ecx: case R9d: file->addCode8(0xB9); break;
-                    case Edx: case R10d: file->addCode8(0xBA); break;
-                    case Ebx: case R11d: file->addCode8(0xBB); break;
-                    case Esp: case R12d: file->addCode8(0xBC); break;
-                    case Ebp: case R13d: file->addCode8(0xBD); break;
-                    case Esi: case R14d: file->addCode8(0xBE); break;
-                    case Edi: case R15d: file->addCode8(0xBF); break;
+                if (isRegister64(dest.type)) {
+                    file->addCode8(0xC7);
                     
-                    default: {}
+                    switch (dest.type) {
+                        case Rax: case R8: file->addCode8(0xC0); break;
+                        case Rcx: case R9: file->addCode8(0xC1); break;
+                        case Rdx: case R10: file->addCode8(0xC2); break;
+                        case Rbx: case R11: file->addCode8(0xC3); break;
+                        case Rsp: case R12: file->addCode8(0xC4); break;
+                        case Rbp: case R13: file->addCode8(0xC5); break;
+                        case Rsi: case R14: file->addCode8(0xC6); break;
+                        case Rdi: case R15: file->addCode8(0xC7); break;
+                        
+                        default: {}
+                    }
+                } else {
+                    switch (dest.type) {
+                        case Eax: case R8d: file->addCode8(0xB8); break;
+                        case Ecx: case R9d: file->addCode8(0xB9); break;
+                        case Edx: case R10d: file->addCode8(0xBA); break;
+                        case Ebx: case R11d: file->addCode8(0xBB); break;
+                        case Esp: case R12d: file->addCode8(0xBC); break;
+                        case Ebp: case R13d: file->addCode8(0xBD); break;
+                        case Esi: case R14d: file->addCode8(0xBE); break;
+                        case Edi: case R15d: file->addCode8(0xBF); break;
+                        
+                        default: {}
+                    }
                 }
                 
                 file->addCode32(src.i32_val);
@@ -243,28 +263,28 @@ void Parser::writeDspOperand(uint8_t size, TokenType base, TokenType regOffset, 
 uint8_t Parser::getRegisterValue(TokenType reg) {
     switch (reg) {
         case Eax: case Rax:
-        case R8d: return 0;
+        case R8d: case R8: return 0;
         
         case Ecx: case Rcx:
-        case R9d: return 1;
+        case R9d: case R9: return 1;
         
         case Edx: case Rdx:
-        case R10d: return 2;
+        case R10d: case R10: return 2;
         
         case Ebx: case Rbx:
-        case R11d: return 3;
+        case R11d: case R11: return 3;
         
         case Esp: case Rsp:
-        case R12d: return 4;
+        case R12d: case R12: return 4;
         
         case Ebp: case Rbp:
-        case R13d: return 5;
+        case R13d: case R13: return 5;
         
         case Esi: case Rsi:
-        case R14d: return 6;
+        case R14d: case R14: return 6;
         
         case Edi: case Rdi: 
-        case R15d: return 7;
+        case R15d: case R15: return 7;
         
         default: {}
     }
@@ -298,7 +318,15 @@ bool Parser::isRegister(TokenType reg) {
         case Rsp:
         case Rbp:
         case Rsi:
-        case Rdi: return true;
+        case Rdi:
+        case R8:
+        case R9:
+        case R10:
+        case R11:
+        case R12:
+        case R13:
+        case R14:
+        case R15: return true;
         
         default: {}
     }
@@ -315,7 +343,15 @@ bool Parser::isRegister64(TokenType reg) {
         case Rsp:
         case Rbp:
         case Rsi:
-        case Rdi: return true;
+        case Rdi:
+        case R8:
+        case R9:
+        case R10:
+        case R11:
+        case R12:
+        case R13:
+        case R14:
+        case R15: return true;
         
         default: {}
     }
@@ -331,7 +367,15 @@ bool Parser::isRegisterExt(TokenType reg) {
         case R12d:
         case R13d:
         case R14d:
-        case R15d: return true;
+        case R15d:
+        case R8:
+        case R9:
+        case R10:
+        case R11:
+        case R12:
+        case R13:
+        case R14:
+        case R15: return true;
         
         default: {}
     }
