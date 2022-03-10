@@ -38,8 +38,12 @@ void SymbolParser::parseText() {
     while (token.type != Eof) {
         switch (token.type) {
             // Instructions that require further disection
+            case Add:
+            case Sub:
+            case And:
+            case Or:
             case Xor:
-            case Mov: parseMov(); break;
+            case Mov: parseStdInstr(); break;
             
             // Instructions where we know the size right off
             case Syscall: location += 2; break;
@@ -106,7 +110,7 @@ void SymbolParser::parseText() {
 // Using "mov ax, etc" requires 0x66 prefix
 // Using ANY 64-bit register requires 0x48 prefix (REX prefix)
 //
-void SymbolParser::parseMov() {
+void SymbolParser::parseStdInstr() {
     Token token = scanner->getNext();
     int regSize = 0;
     bool destMemory = false;

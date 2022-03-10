@@ -4,9 +4,9 @@
 .text
 .global _start
 _start:
-    mov edx, 6
-    mov edi, 15
-    xor edi, edx
+    mov edx, 5
+    mov edi, 6
+    add edi, edx
     
     mov eax, 60
     syscall

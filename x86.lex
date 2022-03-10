@@ -3,6 +3,10 @@
 "syscall" = Syscall
 "ret" = Ret
 "push" = Push
+"add" = Add
+"sub" = Sub
+"and" = And
+"or" = Or
 "xor" = Xor
 
 "eax" = Eax

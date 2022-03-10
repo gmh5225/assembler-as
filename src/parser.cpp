@@ -26,6 +26,10 @@ void Parser::parseText() {
             // Complicated instructions
             case Push: buildPush(); break;
             
+            case Add:
+            case Sub:
+            case And:
+            case Or:
             case Xor:
             case Mov: buildStdInstr(token.type); break;
             
@@ -98,6 +102,7 @@ void Parser::buildStdInstr(TokenType op) {
         scanner->getNext();
         Token src = scanner->getNext();
         
+        // Register-to-register instruction -> 32 bits
         switch (src.type) {
             case Eax:
             case Ecx:
@@ -107,8 +112,12 @@ void Parser::buildStdInstr(TokenType op) {
             case Ebp:
             case Esi:
             case Edi: {
-                if (op == Mov) file->addCode8(0x89);
+                if (op == Add) file->addCode8(0x01);
+                else if (op == Sub) file->addCode8(0x29);
+                else if (op == And) file->addCode8(0x21);
+                else if (op == Or) file->addCode8(0x09);
                 else if (op == Xor) file->addCode8(0x31);
+                else if (op == Mov) file->addCode8(0x89);
                 
                 writeRROperand(3, src.type, dest.type);
             } break;

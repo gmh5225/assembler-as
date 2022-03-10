@@ -192,6 +192,10 @@ TokenType Scanner::getKeyword() {
     else if (buffer == "syscall") return Syscall;
     else if (buffer == "ret") return Ret;
     else if (buffer == "push") return Push;
+    else if (buffer == "add") return Add;
+    else if (buffer == "sub") return Sub;
+    else if (buffer == "and") return And;
+    else if (buffer == "or") return Or;
     else if (buffer == "xor") return Xor;
     else if (buffer == "eax") return Eax;
     else if (buffer == "ebx") return Ebx;

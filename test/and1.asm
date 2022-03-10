@@ -6,9 +6,8 @@
 _start:
     mov edx, 6
     mov edi, 15
-    xor edi, edx
+    and edi, edx
     
     mov eax, 60
     syscall
-    
     

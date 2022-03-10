@@ -25,7 +25,7 @@ private:
     
     // Private functions
     void parseText();
-    void parseMov();
+    void parseStdInstr();
     int getRegSize(TokenType type);
 };
 
