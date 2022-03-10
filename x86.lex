@@ -17,6 +17,14 @@
 "ebp" = Ebp
 "esi" = Esi
 "edi" = Edi
+"r8d" = R8d
+"r9d" = R9d
+"r10d" = R10d
+"r11d" = R11d
+"r12d" = R12d
+"r13d" = R13d
+"r14d" = R14d
+"r15d" = R15d
 
 "rax" = Rax
 "rbx" = Rbx

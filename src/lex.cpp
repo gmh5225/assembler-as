@@ -205,6 +205,14 @@ TokenType Scanner::getKeyword() {
     else if (buffer == "ebp") return Ebp;
     else if (buffer == "esi") return Esi;
     else if (buffer == "edi") return Edi;
+    else if (buffer == "r8d") return R8d;
+    else if (buffer == "r9d") return R9d;
+    else if (buffer == "r10d") return R10d;
+    else if (buffer == "r11d") return R11d;
+    else if (buffer == "r12d") return R12d;
+    else if (buffer == "r13d") return R13d;
+    else if (buffer == "r14d") return R14d;
+    else if (buffer == "r15d") return R15d;
     else if (buffer == "rax") return Rax;
     else if (buffer == "rbx") return Rbx;
     else if (buffer == "rcx") return Rcx;

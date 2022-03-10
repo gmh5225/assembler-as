@@ -178,7 +178,15 @@ void SymbolParser::parseStdInstr() {
         case Esp:
         case Ebp:
         case Esi:
-        case Edi: {
+        case Edi:
+        case R8d:
+        case R9d:
+        case R10d:
+        case R11d:
+        case R12d:
+        case R13d:
+        case R14d:
+        case R15d: {
             if (destMemory) break;
             if (regSize != 32) {
                 std::cerr << "Error: Invalid mov. Expected 32-bit destination." << std::endl;
@@ -246,7 +254,15 @@ int SymbolParser::getRegSize(TokenType type) {
         case Esp:
         case Ebp:
         case Esi:
-        case Edi: return 32;
+        case Edi:
+        case R8d:
+        case R9d:
+        case R10d:
+        case R11d:
+        case R12d:
+        case R13d:
+        case R14d:
+        case R15d: return 32;
         
         case Rax:
         case Rbx:

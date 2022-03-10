@@ -24,6 +24,14 @@ void Token::print() {
         case Ebp: std::cout << "ebp" << std::endl; break;
         case Esi: std::cout << "esi" << std::endl; break;
         case Edi: std::cout << "edi" << std::endl; break;
+        case R8d: std::cout << "r8d" << std::endl; break;
+        case R9d: std::cout << "r9d" << std::endl; break;
+        case R10d: std::cout << "r10d" << std::endl; break;
+        case R11d: std::cout << "r11d" << std::endl; break;
+        case R12d: std::cout << "r12d" << std::endl; break;
+        case R13d: std::cout << "r13d" << std::endl; break;
+        case R14d: std::cout << "r14d" << std::endl; break;
+        case R15d: std::cout << "r15d" << std::endl; break;
         case Rax: std::cout << "rax" << std::endl; break;
         case Rbx: std::cout << "rbx" << std::endl; break;
         case Rcx: std::cout << "rcx" << std::endl; break;
