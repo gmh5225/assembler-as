@@ -104,48 +104,6 @@ void Parser::buildStdInstr(TokenType op) {
         
         // Register-to-register instruction -> 32 bits
         switch (src.type) {
-            case Eax:
-            case Ecx:
-            case Edx:
-            case Ebx:
-            case Esp:
-            case Ebp:
-            case Esi:
-            case Edi:
-            case R8d:
-            case R9d:
-            case R10d:
-            case R11d:
-            case R12d:
-            case R13d:
-            case R14d:
-            case R15d: {
-                writeRexPrefix(src.type, dest.type);
-                if (op == Add) file->addCode8(0x01);
-                else if (op == Sub) file->addCode8(0x29);
-                else if (op == And) file->addCode8(0x21);
-                else if (op == Or) file->addCode8(0x09);
-                else if (op == Xor) file->addCode8(0x31);
-                else if (op == Mov) file->addCode8(0x89);
-                
-                writeRROperand(3, src.type, dest.type);
-            } break;
-            
-            case Rax:
-            case Rcx:
-            case Rdx:
-            case Rbx:
-            case Rsp:
-            case Rbp:
-            case Rsi:
-            case Rdi: {
-                file->addCode8(0x48);
-                if (op == Mov) file->addCode8(0x89);
-                else if (op == Xor) file->addCode8(0x31);
-                
-                writeRROperand(3, src.type, dest.type);
-            } break;
-            
             case Int32: {
                 writeRexPrefix(EmptyToken, dest.type);
                 
@@ -189,7 +147,20 @@ void Parser::buildStdInstr(TokenType op) {
                 }
             } break;
             
-            // TODO: Others
+            default: {
+                if (!isRegister(src.type)) break;
+                
+                // Default to registers
+                writeRexPrefix(src.type, dest.type);
+                if (op == Add) file->addCode8(0x01);
+                else if (op == Sub) file->addCode8(0x29);
+                else if (op == And) file->addCode8(0x21);
+                else if (op == Or) file->addCode8(0x09);
+                else if (op == Xor) file->addCode8(0x31);
+                else if (op == Mov) file->addCode8(0x89);
+                
+                writeRROperand(3, src.type, dest.type);
+            }
         }
     }
 }
