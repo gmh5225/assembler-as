@@ -168,15 +168,21 @@ void Parser::buildStdInstr(TokenType op) {
 void Parser::writeMovI(TokenType op, TokenType dest, int value) {
     // 8-bit mov-i
     if (isRegister8(dest)) {
+        if (dest == Sil || dest == Dil || dest == Spl || dest == Bpl) {
+            file->addCode8(0x40);
+        } else if (isRegisterExt(dest)) {
+            file->addCode8(0x41);
+        }
+    
         switch (dest) {
             case Al: case R8b: file->addCode8(0xB0); break;
             case Cl: case R9b: file->addCode8(0xB1); break;
             case Dl: case R10b: file->addCode8(0xB2); break;
             case Bl: case R11b: file->addCode8(0xB3); break;
-            case Ah: case R12b: file->addCode8(0xB4); break;
-            case Ch: case R13b: file->addCode8(0xB5); break;
-            case Dh: case R14b: file->addCode8(0xB6); break;
-            case Bh: case R15b: file->addCode8(0xB7); break;
+            case Spl: case Ah: case R12b: file->addCode8(0xB4); break;
+            case Bpl: case Ch: case R13b: file->addCode8(0xB5); break;
+            case Sil: case Dh: case R14b: file->addCode8(0xB6); break;
+            case Dil: case Bh: case R15b: file->addCode8(0xB7); break;
             
             default: {}
         }

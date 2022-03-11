@@ -232,18 +232,18 @@ void SymbolParser::parseStdInstr(TokenType op) {
                 location += 4;
             } else if (op == Mov) {
                 if (regSize == 8) location += 2;
-                else if (regSize == 16 && isDestExt) location += 5;
                 else if (regSize == 16) location += 4;
-                else if (regSize == 32 && isDestExt) location += 6;
                 else if (regSize == 32) location += 5;
                 else if (regSize == 64) location += 7;
+                
+                if (isDestExt && regSize != 64) ++location;
             } else {
                 if (regSize == 8) location += 3;
-                else if (regSize == 16 && isDestExt) location += 4;
                 else if (regSize == 16) location += 3;
-                else if (regSize == 32 && isDestExt) location += 4;
                 else if (regSize == 32) location += 3;
                 else if (regSize == 64) location += 4;
+                
+                if (isDestExt && regSize != 64) ++location;
             }
         } break;
         
