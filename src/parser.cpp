@@ -163,8 +163,26 @@ void Parser::buildStdInstr(TokenType op) {
     }
 }
 
+// Mov-immediates are something else on Intel
+//
 void Parser::writeMovI(TokenType op, TokenType dest, int value) {
-    if (isRegister64(dest)) {
+    // 8-bit mov-i
+    if (isRegister8(dest)) {
+        switch (dest) {
+            case Al: case R8b: file->addCode8(0xB0); break;
+            case Cl: case R9b: file->addCode8(0xB1); break;
+            case Dl: case R10b: file->addCode8(0xB2); break;
+            case Bl: case R11b: file->addCode8(0xB3); break;
+            case Ah: case R12b: file->addCode8(0xB4); break;
+            case Ch: case R13b: file->addCode8(0xB5); break;
+            case Dh: case R14b: file->addCode8(0xB6); break;
+            case Bh: case R15b: file->addCode8(0xB7); break;
+            
+            default: {}
+        }
+    
+    // 64-bit mov-i
+    } else if (isRegister64(dest)) {
         writeRexPrefix(EmptyToken, dest);
         file->addCode8(0xC7);
 
@@ -180,6 +198,8 @@ void Parser::writeMovI(TokenType op, TokenType dest, int value) {
             
             default: {}
         }
+        
+    // 16/32-bit mov-i
     } else {
         if (isRegister16(dest)) {
             file->addCode8(0x66);
@@ -215,7 +235,8 @@ void Parser::writeMovI(TokenType op, TokenType dest, int value) {
         }
     }
 
-    if (isRegister16(dest)) file->addCode16(value);
+    if (isRegister8(dest)) file->addCode8(value);
+    else if (isRegister16(dest)) file->addCode16(value);
     else file->addCode32(value);
 }
 

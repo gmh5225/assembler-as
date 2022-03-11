@@ -9,6 +9,28 @@
 "or" = Or
 "xor" = Xor
 
+"al" = Al
+"bl" = Bl
+"cl" = Cl
+"dl" = Dl
+"spl" = Spl
+"bpl" = Bpl
+"sil" = Sil
+"dil" = Dil
+"r8b" = R8b
+"r9b" = R9b
+"r10b" = R10b
+"r11b" = R11b
+"r12b" = R12b
+"r13b" = R13b
+"r14b" = R14b
+"r15b" = R15b
+
+"ah" = Ah
+"bh" = Bh
+"ch" = Ch
+"dh" = Dh
+
 "ax" = Ax
 "bx" = Bx
 "cx" = Cx

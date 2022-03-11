@@ -3,6 +3,23 @@
 
 bool isRegister(TokenType reg) {
     switch (reg) {
+        case Al: case Ah:
+        case Cl: case Ch:
+        case Dl: case Dh:
+        case Bl: case Bh:
+        case Spl:
+        case Bpl:
+        case Sil:
+        case Dil:
+        case R8b:
+        case R9b:
+        case R10b:
+        case R11b:
+        case R12b:
+        case R13b:
+        case R14b:
+        case R15b: return true;
+        
         case Ax:
         case Cx:
         case Dx:
@@ -57,6 +74,30 @@ bool isRegister(TokenType reg) {
         default: {}
     }
     
+    return false;
+}
+
+bool isRegister8(TokenType reg) {
+    switch (reg) {
+        case Al: case Ah:
+        case Cl: case Ch:
+        case Dl: case Dh:
+        case Bl: case Bh:
+        case Spl:
+        case Bpl:
+        case Sil:
+        case Dil:
+        case R8b:
+        case R9b:
+        case R10b:
+        case R11b:
+        case R12b:
+        case R13b:
+        case R14b:
+        case R15b: return true;
+        
+        default: {}
+    }
     return false;
 }
 
