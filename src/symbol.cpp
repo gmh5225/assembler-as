@@ -44,7 +44,7 @@ void SymbolParser::parseText() {
             case And:
             case Or:
             case Xor:
-            case Mov: parseStdInstr(); break;
+            case Mov: parseStdInstr(token.type); break;
             
             // Instructions where we know the size right off
             case Syscall: location += 2; break;
@@ -111,7 +111,7 @@ void SymbolParser::parseText() {
 // Using "mov ax, etc" requires 0x66 prefix
 // Using ANY 64-bit register requires 0x48 prefix (REX prefix)
 //
-void SymbolParser::parseStdInstr() {
+void SymbolParser::parseStdInstr(TokenType op) {
     Token token = scanner->getNext();
     int regSize = 0;
     bool destMemory = false;
@@ -230,12 +230,18 @@ void SymbolParser::parseStdInstr() {
         case Int32: {
             if (destMemory) {
                 location += 4;
-            } else {
+            } else if (op == Mov) {
                 if (regSize == 8) location += 2;
                 else if (regSize == 16) location += 4;
                 else if (regSize == 32 && isDestExt) location += 6;
                 else if (regSize == 32) location += 5;
                 else if (regSize == 64) location += 7;
+            } else {
+                if (regSize == 8) location += 3;
+                else if (regSize == 16) location += 3;
+                else if (regSize == 32 && isDestExt) location += 4;
+                else if (regSize == 32) location += 3;
+                else if (regSize == 64) location += 3;
             }
         } break;
         

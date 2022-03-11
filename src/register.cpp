@@ -43,6 +43,30 @@ bool isRegister(TokenType reg) {
     return false;
 }
 
+bool isRegister32(TokenType reg) {
+    switch (reg) {
+        case Eax:
+        case Ecx:
+        case Edx:
+        case Ebx:
+        case Esp:
+        case Ebp:
+        case Esi:
+        case Edi:
+        case R8d:
+        case R9d:
+        case R10d:
+        case R11d:
+        case R12d:
+        case R13d:
+        case R14d:
+        case R15d: return true;
+        
+        default: {}
+    }
+    return false;
+}
+
 bool isRegister64(TokenType reg) {
     switch (reg) {
         case Rax:

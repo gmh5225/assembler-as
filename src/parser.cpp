@@ -111,37 +111,42 @@ void Parser::buildStdInstr(TokenType op) {
             case Int32: {
                 writeRexPrefix(EmptyToken, dest.type);
                 
-                if (isRegister64(dest.type)) {
-                    file->addCode8(0xC7);
+                if (op == Mov) {
+                    if (isRegister64(dest.type)) {
+                        file->addCode8(0xC7);
+                        
+                        switch (dest.type) {
+                            case Rax: case R8: file->addCode8(0xC0); break;
+                            case Rcx: case R9: file->addCode8(0xC1); break;
+                            case Rdx: case R10: file->addCode8(0xC2); break;
+                            case Rbx: case R11: file->addCode8(0xC3); break;
+                            case Rsp: case R12: file->addCode8(0xC4); break;
+                            case Rbp: case R13: file->addCode8(0xC5); break;
+                            case Rsi: case R14: file->addCode8(0xC6); break;
+                            case Rdi: case R15: file->addCode8(0xC7); break;
+                            
+                            default: {}
+                        }
+                    } else {
+                        switch (dest.type) {
+                            case Eax: case R8d: file->addCode8(0xB8); break;
+                            case Ecx: case R9d: file->addCode8(0xB9); break;
+                            case Edx: case R10d: file->addCode8(0xBA); break;
+                            case Ebx: case R11d: file->addCode8(0xBB); break;
+                            case Esp: case R12d: file->addCode8(0xBC); break;
+                            case Ebp: case R13d: file->addCode8(0xBD); break;
+                            case Esi: case R14d: file->addCode8(0xBE); break;
+                            case Edi: case R15d: file->addCode8(0xBF); break;
+                            
+                            default: {}
+                        }
+                    }
                     
-                    switch (dest.type) {
-                        case Rax: case R8: file->addCode8(0xC0); break;
-                        case Rcx: case R9: file->addCode8(0xC1); break;
-                        case Rdx: case R10: file->addCode8(0xC2); break;
-                        case Rbx: case R11: file->addCode8(0xC3); break;
-                        case Rsp: case R12: file->addCode8(0xC4); break;
-                        case Rbp: case R13: file->addCode8(0xC5); break;
-                        case Rsi: case R14: file->addCode8(0xC6); break;
-                        case Rdi: case R15: file->addCode8(0xC7); break;
-                        
-                        default: {}
-                    }
+                    file->addCode32(src.i32_val);
                 } else {
-                    switch (dest.type) {
-                        case Eax: case R8d: file->addCode8(0xB8); break;
-                        case Ecx: case R9d: file->addCode8(0xB9); break;
-                        case Edx: case R10d: file->addCode8(0xBA); break;
-                        case Ebx: case R11d: file->addCode8(0xBB); break;
-                        case Esp: case R12d: file->addCode8(0xBC); break;
-                        case Ebp: case R13d: file->addCode8(0xBD); break;
-                        case Esi: case R14d: file->addCode8(0xBE); break;
-                        case Edi: case R15d: file->addCode8(0xBF); break;
-                        
-                        default: {}
-                    }
+                    writeAluI(op, dest.type);
+                    file->addCode8(src.i32_val);
                 }
-                
-                file->addCode32(src.i32_val);
             } break;
             
             case LBrace: {
@@ -185,6 +190,36 @@ void Parser::buildStdInstr(TokenType op) {
             }
         }
     }
+}
+
+// Encodes an ALU-I instruction
+//
+// Encoding: 0x83 | 11 <ALU OP> <dest reg>
+// OPS
+// Add: 000
+// Sub:
+// And:
+// Or:
+// Xor:
+//
+void Parser::writeAluI(TokenType op, TokenType dest) {
+    uint8_t output = 0xC0;
+    uint8_t destReg = getRegisterValue(dest);
+    
+    switch (op) {
+        case Sub: break;
+        case And: break;
+        case Or: break;
+        case Xor: break;
+        default: {}
+    }
+    
+    // Encode the register
+    output &= 0b11111000;
+    output |= destReg;
+    
+    file->addCode8(0x83);
+    file->addCode8(output);
 }
 
 // Encodes a REX prefix if needed (see section 2.2.1)
