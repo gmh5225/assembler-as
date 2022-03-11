@@ -146,6 +146,8 @@ void Parser::buildStdInstr(TokenType op) {
             default: {
                 if (!isRegister(src.type)) break;
                 
+                if (isRegister16(dest.type)) file->addCode8(0x66);
+                
                 // Default to registers
                 writeRexPrefix(src.type, dest.type);
                 if (op == Add) file->addCode8(0x01);

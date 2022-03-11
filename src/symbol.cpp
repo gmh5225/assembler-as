@@ -232,12 +232,14 @@ void SymbolParser::parseStdInstr(TokenType op) {
                 location += 4;
             } else if (op == Mov) {
                 if (regSize == 8) location += 2;
+                else if (regSize == 16 && isDestExt) location += 5;
                 else if (regSize == 16) location += 4;
                 else if (regSize == 32 && isDestExt) location += 6;
                 else if (regSize == 32) location += 5;
                 else if (regSize == 64) location += 7;
             } else {
                 if (regSize == 8) location += 3;
+                else if (regSize == 16 && isDestExt) location += 4;
                 else if (regSize == 16) location += 3;
                 else if (regSize == 32 && isDestExt) location += 4;
                 else if (regSize == 32) location += 3;
@@ -258,7 +260,21 @@ void SymbolParser::parseStdInstr(TokenType op) {
         } break;
         
         default: {
-            std::cerr << "Error: Invalid mov. Unknown source operand." << std::endl;
+            // Check for a 16-bit register-register move
+            if (isRegister16(token.type)) {
+                if (destMemory) break;
+                if (regSize != 16) {
+                    std::cerr << "Error: Invalid mov. Expected 16-bit destination." << std::endl;
+                    return;
+                }
+                
+                location += 3;
+                if (isDestExt || isRegisterExt(token.type)) ++location;
+                
+            // Otherwise we have an error
+            } else {
+                std::cerr << "Error: Invalid mov. Unknown source operand." << std::endl;
+            }
         }
     }
 }

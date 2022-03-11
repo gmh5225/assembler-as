@@ -134,6 +134,14 @@ bool isRegister64(TokenType reg) {
 
 bool isRegisterExt(TokenType reg) {
     switch (reg) {
+        case R8w:
+        case R9w:
+        case R10w:
+        case R11w:
+        case R12w:
+        case R13w:
+        case R14w:
+        case R15w:
         case R8d:
         case R9d:
         case R10d:
