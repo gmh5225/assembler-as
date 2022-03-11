@@ -10,7 +10,7 @@ echo ""
 
 for d in ./test/*; do
     for file in $d/*; do
-        echo `basename $file`
+        echo "`basename $d` `basename $file`"
         
         build/as $file
         ld a.out -o out

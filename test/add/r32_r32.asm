@@ -4,10 +4,9 @@
 .text
 .global _start
 _start:
-    mov r12d, 15
-    mov r10d, 10
-    add r10d, r12d
-    mov edi, r10d
+    mov edi, 15
+    mov ebx, 10
+    add edi, ebx
     
     mov eax, 60
     syscall
