@@ -9,8 +9,7 @@ _start:
     mov rbp, rsp
     
     mov DWORD PTR [rbp-4], 10
-    mov r12d, [rbp-4]
-    mov edi, r12d
+    mov edi, [rbp-4]
     
     mov eax, 60
     syscall

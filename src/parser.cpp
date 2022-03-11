@@ -163,6 +163,7 @@ void Parser::buildStdInstr(TokenType op) {
                     scanner->getNext();                 // Consume ']'
                     
                     // Now, encode
+                    writeRexPrefix(dest.type, EmptyToken);
                     file->addCode8(0x8B);
                     writeDspOperand(1, base.type, dest.type, offset);
                 }
