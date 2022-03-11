@@ -233,6 +233,7 @@ void SymbolParser::parseStdInstr() {
             } else {
                 if (regSize == 8) location += 2;
                 else if (regSize == 16) location += 4;
+                else if (regSize == 32 && isDestExt) location += 6;
                 else if (regSize == 32) location += 5;
                 else if (regSize == 64) location += 7;
             }
