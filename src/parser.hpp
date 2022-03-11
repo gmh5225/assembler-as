@@ -20,6 +20,9 @@ private:
     void parseText();
     void buildPush();
     void buildStdInstr(TokenType op);
+    void writeMovI(TokenType op, TokenType dest, int value);
+    
+    // In encoding.cpp
     void writeAluI(TokenType op, TokenType dest);
     void writeRexPrefix(TokenType src, TokenType dest);
     void writeRROperand(uint8_t prefix, TokenType src, TokenType dest);
