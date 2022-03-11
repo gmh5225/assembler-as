@@ -4,8 +4,7 @@
 .text
 .global _start
 _start:
-    mov r11, 45
-    mov rdi, r11
+    mov rdi, 45
     
     mov rax, 60
     syscall
