@@ -269,6 +269,23 @@ void SymbolParser::parseStdInstr(TokenType op) {
 //
 int SymbolParser::getRegSize(TokenType type) {
     switch (type) {
+        case Ax:
+        case Bx:
+        case Cx:
+        case Dx:
+        case Sp:
+        case Bp:
+        case Si:
+        case Di:
+        case R8w:
+        case R9w:
+        case R10w:
+        case R11w:
+        case R12w:
+        case R13w:
+        case R14w:
+        case R15w: return 16;
+        
         case Eax:
         case Ebx:
         case Ecx:

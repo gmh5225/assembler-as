@@ -9,6 +9,23 @@
 "or" = Or
 "xor" = Xor
 
+"ax" = Ax
+"bx" = Bx
+"cx" = Cx
+"dx" = Dx
+"sp" = Sp
+"bp" = Bp
+"si" = Si
+"di" = Di
+"r8w" = R8w
+"r9w" = R9w
+"r10w" = R10w
+"r11w" = R11w
+"r12w" = R12w
+"r13w" = R13w
+"r14w" = R14w
+"r15w" = R15w
+
 "eax" = Eax
 "ebx" = Ebx
 "ecx" = Ecx

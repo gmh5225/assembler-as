@@ -118,6 +118,7 @@ public:
     
     void addFunctionSymbol(std::string name, int location, bool isGlobal);
     void addCode8(uint8_t code);
+    void addCode16(uint16_t code);
     void addCode32(uint32_t code);
 private:
     // Utility functions

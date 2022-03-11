@@ -109,10 +109,9 @@ void Parser::buildStdInstr(TokenType op) {
             // This one is a pain because it varies for each register type
             //
             case Int32: {
-                writeRexPrefix(EmptyToken, dest.type);
-                
                 if (op == Mov) {
                     if (isRegister64(dest.type)) {
+                        writeRexPrefix(EmptyToken, dest.type);
                         file->addCode8(0xC7);
                         
                         switch (dest.type) {
@@ -128,22 +127,44 @@ void Parser::buildStdInstr(TokenType op) {
                             default: {}
                         }
                     } else {
+                        if (isRegister16(dest.type)) {
+                            file->addCode8(0x66);
+                        }
+                        writeRexPrefix(EmptyToken, dest.type);
+                    
                         switch (dest.type) {
+                            case Ax: case R8w:
                             case Eax: case R8d: file->addCode8(0xB8); break;
+                            
+                            case Cx: case R9w:
                             case Ecx: case R9d: file->addCode8(0xB9); break;
+                            
+                            case Dx: case R10w:
                             case Edx: case R10d: file->addCode8(0xBA); break;
+                            
+                            case Bx: case R11w:
                             case Ebx: case R11d: file->addCode8(0xBB); break;
+                            
+                            case Sp: case R12w:
                             case Esp: case R12d: file->addCode8(0xBC); break;
+                            
+                            case Bp: case R13w:
                             case Ebp: case R13d: file->addCode8(0xBD); break;
+                            
+                            case Si: case R14w:
                             case Esi: case R14d: file->addCode8(0xBE); break;
+                            
+                            case Di: case R15w:
                             case Edi: case R15d: file->addCode8(0xBF); break;
                             
                             default: {}
                         }
                     }
                     
-                    file->addCode32(src.i32_val);
+                    if (isRegister16(dest.type)) file->addCode16(src.i32_val);
+                    else file->addCode32(src.i32_val);
                 } else {
+                    writeRexPrefix(EmptyToken, dest.type);
                     writeAluI(op, dest.type);
                     file->addCode8(src.i32_val);
                 }
@@ -299,27 +320,35 @@ void Parser::writeDspOperand(uint8_t size, TokenType base, TokenType regOffset, 
 
 uint8_t Parser::getRegisterValue(TokenType reg) {
     switch (reg) {
+        case Ax: case R8w:
         case Eax: case Rax:
         case R8d: case R8: return 0;
         
+        case Cx: case R9w:
         case Ecx: case Rcx:
         case R9d: case R9: return 1;
         
+        case Dx: case R10w:
         case Edx: case Rdx:
         case R10d: case R10: return 2;
         
+        case Bx: case R11w:
         case Ebx: case Rbx:
         case R11d: case R11: return 3;
         
+        case Sp: case R12w:
         case Esp: case Rsp:
         case R12d: case R12: return 4;
         
+        case Bp: case R13w:
         case Ebp: case Rbp:
         case R13d: case R13: return 5;
         
+        case Si: case R14w:
         case Esi: case Rsi:
         case R14d: case R14: return 6;
         
+        case Di: case R15w:
         case Edi: case Rdi: 
         case R15d: case R15: return 7;
         

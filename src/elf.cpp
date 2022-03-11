@@ -245,6 +245,11 @@ void Elf64File::addCode8(uint8_t code) {
     text->code.push_back(code);
 }
 
+void Elf64File::addCode16(uint16_t code) {
+    text->code.push_back(code);
+    text->code.push_back(code << 8);
+}
+
 void Elf64File::addCode32(uint32_t code) {
     text->code.push_back(code);
     text->code.push_back(code << 8);
