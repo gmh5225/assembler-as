@@ -5,9 +5,8 @@
 .global _start
 _start:
     mov r15, 5
-    mov r11, 10
-    add r15, r11
-    mov rdi, r15
+    mov rdi, 10
+    add rdi, r15
     
     mov eax, 60
     syscall

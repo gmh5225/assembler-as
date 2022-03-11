@@ -5,8 +5,8 @@
 .global _start
 _start:
     mov r15, 5
-    mov r11, 10
-    add r15, r11
+    mov rax, 10
+    add r15, rax
     mov rdi, r15
     
     mov eax, 60
