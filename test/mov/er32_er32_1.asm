@@ -6,8 +6,7 @@
 _start:
     mov ebx, 5
     mov r15d, ebx
-    mov r14d, r15d
-    mov edi, r14d
+    mov edi, r15d
     
     mov eax, 60
     syscall

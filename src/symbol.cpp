@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "symbol.hpp"
+#include "register.hpp"
 
 SymbolParser::SymbolParser(std::string input) {
     scanner = new Scanner(input);
@@ -114,6 +115,7 @@ void SymbolParser::parseStdInstr() {
     Token token = scanner->getNext();
     int regSize = 0;
     bool destMemory = false;
+    bool isDestExt = false;
     
     switch (token.type) {
         case DWORD: {
@@ -154,6 +156,7 @@ void SymbolParser::parseStdInstr() {
         // Default to a register
         default: {
             regSize = getRegSize(token.type);
+            isDestExt = isRegisterExt(token.type);
             if (regSize == -1) {
                 std::cerr << "Error: Invalid register in mov." << std::endl;
                 return;
@@ -172,6 +175,7 @@ void SymbolParser::parseStdInstr() {
     // IMPORTANT: All this needs to be update for extended registers
     token = scanner->getNext();
     switch (token.type) {
+        // TODO: Clean this up
         case Eax:
         case Ebx:
         case Ecx:
@@ -195,6 +199,7 @@ void SymbolParser::parseStdInstr() {
             }
             
             location += 2;
+            if (isDestExt || isRegisterExt(token.type)) ++location;
         } break;
         
         case Rax:
