@@ -4,8 +4,9 @@
 .text
 .global _start
 _start:
-    mov ah, 1
-    mov di, ax
+    mov al, 12
+    mov r11b, al
+    mov dil, r11b
     
     mov eax, 60
     syscall

@@ -4,7 +4,8 @@
 .text
 .global _start
 _start:
-    mov ah, 1
+    mov bh, 1
+    mov ah, bh
     mov di, ax
     
     mov eax, 60
