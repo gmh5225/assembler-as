@@ -114,9 +114,30 @@ Elf64File::Elf64File(std::string name) {
     //symtab->header->sh_addralign = text->index;     // Connects to .text
     symtab->header->sh_addralign = 8;
     symtab->header->sh_entsize = sizeof(Elf64_Sym);
-    sections.push_back(symtab->header);
     
+    sections.push_back(symtab->header);
+    symtab->index = sections.size() - 1;
+    
+    //
+    // Section .rela.text
+    //
+    shstrtable->table.push_back(".rela.text");
+    
+    rela_text = new ElfRelaText;
+    rela_text->header = new Elf64_Shdr;
+    rela_text->header->sh_name = getSectionNamePos(".rela.text");
+    rela_text->header->sh_type = 4;                                     // SHT_RELA
+    rela_text->header->sh_link = symtab->index;
+    rela_text->header->sh_info = text->index;
+    rela_text->header->sh_addralign = 8;
+    rela_text->header->sh_entsize = sizeof(Elf64_Rela);
+    
+    sections.push_back(rela_text->header);
+    rela_text->index = sections.size() - 1;
+    
+    //
     // Load the default symbol table
+    //
     Elf64_Sym *nullSym = new Elf64_Sym;
     symtab->symbols.push_back(nullSym);
     
@@ -182,7 +203,14 @@ void Elf64File::write() {
         }
     }
     
+    // -> .rela_text
+    size = sizeof(Elf64_Rela) * rela_text->symbols.size();
+    rela_text->header->sh_offset = Elf64_Off(codeOffset);
+    rela_text->header->sh_size = Elf64_Xword(size);
+    codeOffset += size;
+    
     // -> data
+    int dataOffset = codeOffset;                        // We have to run an update on .rela_text for this
     size = data->data.size();
     data->header->sh_offset = Elf64_Off(codeOffset);
     data->header->sh_size = Elf64_Xword(size);
@@ -217,6 +245,12 @@ void Elf64File::write() {
     // -> symtab
     for (auto sym : symtab->symbols) fwrite(sym, sizeof(Elf64_Sym), 1, file);
     
+    // -> rela.text
+    for (auto sym : rela_text->symbols) {
+        sym->r_addend += dataOffset;
+        fwrite(sym, sizeof(Elf64_Rela), 1, file);
+    }
+    
     // -> data
     for (auto byte : data->data) fputc(byte, file);
     
@@ -239,6 +273,27 @@ void Elf64File::addFunctionSymbol(std::string name, int location, bool isGlobal)
     symbol->st_shndx = text->index;
     symbol->st_value = Elf64_Addr(location);
     symtab->symbols.push_back(symbol);
+}
+
+void Elf64File::addDataSymbol(std::string name, int location) {
+    strtab->table.push_back(name);
+    int pos = getStringPos(name);
+    
+    Elf64_Sym *symbol = new Elf64_Sym;
+    symbol->st_name = pos;
+    symbol->st_info = ELF64_ST_INFO(STB_LOCAL, STT_NOTYPE);
+    symbol->st_shndx = data->index;
+    symbol->st_value = Elf64_Addr(location);
+    symtab->symbols.push_back(symbol);
+}
+
+void Elf64File::addDataRef(std::string name) {
+
+}
+
+void Elf64File::addDataStr(std::string str) {
+    for (int i = 0; i<str.length(); i++) data->data.push_back(str[i]);
+    data->data.push_back(0);
 }
 
 void Elf64File::addCode8(uint8_t code) {

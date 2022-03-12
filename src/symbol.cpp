@@ -15,6 +15,8 @@ Symbols *SymbolParser::getSymbols() {
     while (token.type != Eof) {
         if (token.type == Id && token.id_val == ".text") {
             parseText();
+        } else if (token.type == Id && token.id_val == ".data") {
+            parseData();
         }
         token = scanner->getNext();
     }
@@ -31,6 +33,60 @@ void SymbolParser::processSymbols(Elf64File *file) {
         if (std::find(symbols->global.begin(), symbols->global.end(), x.first) != symbols->global.end())
             isGlobal = true;
         file->addFunctionSymbol(x.first, x.second, isGlobal);
+    }
+    
+    // Add .data string values
+    for (auto str : symbols->data_strings) {
+        file->addDataStr(str);
+    }
+    
+    // Add .data values to the symbol table
+    for (auto const &x : symbols->data_locations) {
+        file->addDataSymbol(x.first, x.second);
+    }
+}
+
+void SymbolParser::parseData() {
+    Token token = scanner->getNext();
+    while (token.type != Eof) {
+        if (token.type == Id && token.id_val == ".text") {
+            scanner->rewind(token);
+            break;
+        }
+    
+        Token nameToken = token;
+        token = scanner->getNext();       // This is a colon
+        if (nameToken.type != Id) {
+            std::cerr << "Error: Expected name for data value." << std::endl;
+            return;
+        }
+        
+        if (token.type != Colon) {
+            std::cerr << "Error: Expecting colon after data value name." << std::endl;
+            return;
+        }
+        
+        // Get the data value type
+        token = scanner->getNext();
+        if (token.type != Id) {
+            std::cerr << "Error: Unknown value in data value declaration." << std::endl;
+            return;
+        }
+        
+        // Parse a string data value
+        if (token.id_val == ".string") {
+            token = scanner->getNext();
+            if (token.type != String) {
+                std::cerr << "Error: Expected string literal." << std::endl;
+                return;
+            }
+            
+            symbols->data_strings.push_back(token.id_val);
+            symbols->data_locations[nameToken.id_val] = dataLocation;
+            dataLocation += token.id_val.length() + 1;
+        }
+        
+        token = scanner->getNext();
     }
 }
 

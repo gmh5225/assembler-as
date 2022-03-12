@@ -69,14 +69,19 @@ struct Elf64_Shdr {
     Elf64_Xword	sh_entsize = 0;		/* Entry size if section holds table */
 };
 
-struct Elf64_Sym
-{
+struct Elf64_Sym {
     Elf64_Word	st_name = 0;		/* Symbol name (string tbl index) */
     unsigned char	st_info = 0;		/* Symbol type and binding */
     unsigned char st_other = 0;		/* Symbol visibility */
     Elf64_Section	st_shndx = 0;		/* Section index */
     Elf64_Addr	st_value = 0;		/* Symbol value */
     Elf64_Xword	st_size = 0;		/* Symbol size */
+};
+
+struct Elf64_Rela {
+  Elf64_Addr	r_offset;		/* Address */
+  Elf64_Xword	r_info;			/* Relocation type and symbol index */
+  Elf64_Sxword	r_addend;		/* Addend */
 };
 
 // Abstractions of other section headers
@@ -110,13 +115,22 @@ struct ElfText {
     int index;
 };
 
+struct ElfRelaText {
+    Elf64_Shdr *header;
+    std::vector<Elf64_Rela *> symbols;
+    int index;
+};
+
 // Represents an ELF file
 class Elf64File {
 public:
     explicit Elf64File(std::string name);
     void write();
     
+    void addDataStr(std::string str);
     void addFunctionSymbol(std::string name, int location, bool isGlobal);
+    void addDataSymbol(std::string name, int location);
+    void addDataRef(std::string name);
     void addCode8(uint8_t code);
     void addCode16(uint16_t code);
     void addCode32(uint32_t code);
@@ -137,6 +151,7 @@ private:
     ElfData *data;
     ElfText *text;
     Elf64_Sym *textSym;
+    ElfRelaText *rela_text;
     
     std::vector<Elf64_Shdr *> sections;
 };

@@ -50,6 +50,13 @@ Token Scanner::getNext() {
         
         rawBuffer += next;
         
+        if (next == ';') {
+            while (next != '\n' && !reader.eof()) {
+                next = reader.get();
+                rawBuffer += next;
+            }
+            continue;
+        }
         
         
         
