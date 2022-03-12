@@ -29,6 +29,9 @@ for d in ./test/*; do
         NM1=`nm a.out`
         NM2=`nm test.out`
         
+        OUTPUT1=`./out`
+        OUTPUT2=`./test.bin`
+        
         rm a.out
         rm out
         rm test.out
@@ -36,10 +39,27 @@ for d in ./test/*; do
         
         if [[ $R1 == $R2 ]] ; then
             if [[ $NM1 == $NM2 ]] ; then
-                echo "Pass"
-                echo ""
-                
-                total=$((total+1))
+                if [[ `basename $d` == "output" ]] ; then
+                    if [[ $OUTPUT1 == $OUTPUT2 ]] ; then
+                        echo "[OUTPUT] Pass"
+                        echo ""
+                        
+                        total=$((total+1))
+                    else
+                        echo "Output test failed."
+                        echo "Expected:"
+                        echo "$OUTPUT2"
+                        echo "Actual:"
+                        echo "$OUTPUT1"
+                        echo ""
+                        exit 1
+                    fi
+                else
+                    echo "Pass"
+                    echo ""
+                    
+                    total=$((total+1))
+                fi
             else
                 echo "Test failed- symbol check."
                 echo "Expected":
