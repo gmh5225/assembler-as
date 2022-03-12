@@ -14,11 +14,16 @@ for d in ./test/*; do
     for file in $d/*; do
         echo "`basename $d` `basename $file`"
         
+        OBJS=""
+        if [[ `basename $d` == "extern" ]] ; then
+            OBJS="build/lib_test.o"
+        fi
+        
         build/as $file
-        ld a.out -o out
+        ld a.out $OBJS -o out
         
         as $file -o test.out
-        ld test.out -o test.bin
+        ld test.out $OBJS -o test.bin
         
         ./out
         R1=$?
@@ -39,7 +44,7 @@ for d in ./test/*; do
         
         if [[ $R1 == $R2 ]] ; then
             if [[ $NM1 == $NM2 ]] ; then
-                if [[ `basename $d` == "output" ]] ; then
+                if [[ `basename $d` == "output" || `basename $d` == "extern" ]] ; then
                     if [[ $OUTPUT1 == $OUTPUT2 ]] ; then
                         echo "[OUTPUT] Pass"
                         echo ""
