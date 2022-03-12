@@ -9,9 +9,8 @@ _start:
     mov rbp, rsp
     
     mov DWORD PTR [rbp-4], 10
-    mov ah, [rbp-4]
-    mov bl, ah
-    mov dil, bl
+    mov r14b, [rbp-4]
+    mov dil, r14b
     
     mov eax, 60
     syscall

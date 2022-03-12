@@ -158,8 +158,15 @@ void Parser::buildStdInstr(TokenType op) {
                     scanner->getNext();                 // Consume ']'
                     
                     // Now, encode
+                    // Start with any prefixes
+                    if (isRegister16(dest.type)) file->addCode8(0x66);
                     writeRexPrefix(dest.type, EmptyToken);
-                    file->addCode8(0x8B);
+                    
+                    // Opcode
+                    if (isRegister8(dest.type)) file->addCode8(0x8A);
+                    else file->addCode8(0x8B);
+                    
+                    // Operand
                     writeDspOperand(1, base.type, dest.type, offset);
                 }
             } break;
