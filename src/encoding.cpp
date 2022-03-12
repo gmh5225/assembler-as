@@ -15,14 +15,19 @@
 void Parser::writeAluI(TokenType op, TokenType dest) {
     uint8_t output = 0xC0;
     uint8_t destReg = getRegisterValue(dest);
+    uint8_t alu_op = 0;         // Default to add == 0
     
     switch (op) {
-        case Sub: break;
-        case And: break;
-        case Or: break;
-        case Xor: break;
+        case Sub: alu_op = 5; break;
+        case And: alu_op = 4; break;
+        case Or: alu_op = 1; break;
+        case Xor: alu_op = 6; break;
         default: {}
     }
+    
+    // Encode the ALU operation
+    output &= 0b11000111;
+    output |= (alu_op << 3);
     
     // Encode the register
     output &= 0b11111000;

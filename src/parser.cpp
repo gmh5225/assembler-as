@@ -193,14 +193,20 @@ void Parser::buildStdInstr(TokenType op) {
                 
                 // Default to registers
                 writeRexPrefix(src.type, dest.type);
-                if (op == Add) file->addCode8(0x01);
-                else if (op == Sub) file->addCode8(0x29);
-                else if (op == And) file->addCode8(0x21);
-                else if (op == Or) file->addCode8(0x09);
-                else if (op == Xor) file->addCode8(0x31);
-                else if (op == Mov) {
-                    if (isRegister8(dest.type)) file->addCode8(0x88);
-                    else file->addCode8(0x89);
+                if (isRegister8(dest.type)) {
+                    if (op == Add) file->addCode8(0x00);
+                    else if (op == Sub) file->addCode8(0x28);
+                    else if (op == And) file->addCode8(0x20);
+                    else if (op == Or) file->addCode8(0x08);
+                    else if (op == Xor) file->addCode8(0x30);
+                    else if (op == Mov) file->addCode8(0x88);
+                } else {
+                    if (op == Add) file->addCode8(0x01);
+                    else if (op == Sub) file->addCode8(0x29);
+                    else if (op == And) file->addCode8(0x21);
+                    else if (op == Or) file->addCode8(0x09);
+                    else if (op == Xor) file->addCode8(0x31);
+                    else if (op == Mov) file->addCode8(0x89);
                 }
                 
                 writeRROperand(3, src.type, dest.type);
