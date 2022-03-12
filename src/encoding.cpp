@@ -33,7 +33,8 @@ void Parser::writeAluI(TokenType op, TokenType dest) {
     output &= 0b11111000;
     output |= destReg;
     
-    file->addCode8(0x83);
+    if (isRegister8(dest)) file->addCode8(0x80);
+    else file->addCode8(0x83);
     file->addCode8(output);
 }
 

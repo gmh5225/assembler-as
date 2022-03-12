@@ -4,10 +4,9 @@
 .text
 .global _start
 _start:
-    mov bh, 5
-    add bh, 1
-    mov bl, bh
-    mov dil, bl
+    mov r12b, 5
+    sub r12b, 1
+    mov dil, r12b
     
     mov eax, 60
     syscall

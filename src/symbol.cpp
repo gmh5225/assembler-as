@@ -256,7 +256,7 @@ void SymbolParser::parseStdInstr(TokenType op) {
                 if (isDestExt && regSize != 64) ++location;
             } else {
                 if (regSize == 8) location += 3;
-                else if (regSize == 16) location += 3;
+                else if (regSize == 16) location += 4;
                 else if (regSize == 32) location += 3;
                 else if (regSize == 64) location += 4;
                 

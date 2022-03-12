@@ -5,7 +5,7 @@
 .global _start
 _start:
     mov bh, 5
-    add bh, 1
+    sub bh, 1
     mov bl, bh
     mov dil, bl
     

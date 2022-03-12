@@ -148,7 +148,11 @@ void Parser::buildStdInstr(TokenType op) {
                 if (op == Mov) {
                     writeMovI(op, dest.type, src.i32_val);
                 } else {
+                    // Write the prefixes
+                    if (isRegister16(dest.type)) file->addCode8(0x66);
                     writeRexPrefix(EmptyToken, dest.type);
+                    
+                    // Write the rest of the instruction
                     writeAluI(op, dest.type);
                     file->addCode8(src.i32_val);
                 }
