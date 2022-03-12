@@ -44,6 +44,11 @@ void SymbolParser::processSymbols(Elf64File *file) {
     for (auto const &x : symbols->data_locations) {
         file->addDataSymbol(x.first, x.second);
     }
+    
+    // Add .rela.text values
+    for (auto pair : symbols->rela_locations) {
+        file->addDataRef(pair.first, pair.second);
+    }
 }
 
 void SymbolParser::parseData() {
@@ -331,6 +336,35 @@ void SymbolParser::parseStdInstr(TokenType op) {
             else if (regSize == 64) location += 4;
             
             if (isDestExt && regSize != 64) ++location;
+        } break;
+        
+        // .data references
+        case OFFSET: {
+            token = scanner->getNext();     // FLAT
+            token = scanner->getNext();     // :
+            token = scanner->getNext();     // The ID
+            
+            // Update the location counter
+            int labelLocation = 0;
+            if (regSize == 16) {
+                labelLocation = location + 2;
+                location += 4;
+            } else if (regSize == 32) {
+                labelLocation = location + 1;
+                location += 5;
+            } else if (regSize == 64) {
+                labelLocation = location + 3;
+                location += 7;
+            }
+            
+            if (isDestExt && regSize != 64) {
+                ++location;
+                ++labelLocation;
+            }
+            
+            // Update the symbol table
+            int symbolLocation = symbols->data_locations[token.id_val];
+            symbols->rela_locations.push_back(std::pair<int,int>(labelLocation, symbolLocation));
         } break;
         
         default: {

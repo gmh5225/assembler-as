@@ -15,6 +15,7 @@ struct Symbols {
     // .data values
     std::vector<std::string> data_strings;
     std::map<std::string, int> data_locations;
+    std::vector<std::pair<int,int>> rela_locations;
 };
 
 class SymbolParser {

@@ -275,6 +275,8 @@ TokenType Scanner::getKeyword() {
     else if (buffer == "r15") return R15;
     else if (buffer == "DWORD") return DWORD;
     else if (buffer == "PTR") return PTR;
+    else if (buffer == "OFFSET") return OFFSET;
+    else if (buffer == "FLAT") return FLAT;
     return EmptyToken;
 }
 

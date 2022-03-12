@@ -158,6 +158,17 @@ void Parser::buildStdInstr(TokenType op) {
                 }
             } break;
             
+            // Local label
+            //
+            // Same as immediate-to-register, except with zero
+            case OFFSET: {
+                scanner->getNext();         // FLAT
+                scanner->getNext();         // COLON
+                scanner->getNext();         // ID
+                
+                writeMovI(op, dest.type, 0);
+            } break;
+            
             case LBrace: {
                 Token base = scanner->getNext();
                 int offset = 1;

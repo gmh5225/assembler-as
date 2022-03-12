@@ -85,6 +85,8 @@
 
 "DWORD" = DWORD
 "PTR" = PTR
+"OFFSET" = OFFSET
+"FLAT" = FLAT
 
 ':' = Colon
 ',' = Comma

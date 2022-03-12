@@ -247,7 +247,7 @@ void Elf64File::write() {
     
     // -> rela.text
     for (auto sym : rela_text->symbols) {
-        sym->r_addend += dataOffset;
+        //sym->r_addend = dataOffset;
         fwrite(sym, sizeof(Elf64_Rela), 1, file);
     }
     
@@ -287,8 +287,12 @@ void Elf64File::addDataSymbol(std::string name, int location) {
     symtab->symbols.push_back(symbol);
 }
 
-void Elf64File::addDataRef(std::string name) {
-
+void Elf64File::addDataRef(int codeOffset, int dataOffset) {
+    Elf64_Rela *rela = new Elf64_Rela;
+    rela->r_offset = codeOffset;
+    rela->r_info = ELF64_R_INFO(2, 1);
+    rela->r_addend = dataOffset;
+    rela_text->symbols.push_back(rela);
 }
 
 void Elf64File::addDataStr(std::string str) {

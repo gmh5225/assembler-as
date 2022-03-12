@@ -89,6 +89,8 @@ enum TokenType {
     R15,
     DWORD,
     PTR,
+    OFFSET,
+    FLAT,
     Colon,
     Comma,
     LBrace,

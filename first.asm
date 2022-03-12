@@ -8,13 +8,13 @@
 _start:
     mov rax, 1
     mov rdi, 1
-    ;mov rsi, OFFSET FLAT:STR1
+    mov rsi, OFFSET FLAT:STR1
     mov rdx, 7
     syscall
     
     mov rax, 1
     mov rdi, 1
-    ;mov rsi, OFFSET FLAT:STR2
+    mov rsi, OFFSET FLAT:STR2
     mov rdx, 4
     syscall
     

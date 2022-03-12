@@ -87,6 +87,8 @@ void Token::print() {
         case R15: std::cout << "r15" << std::endl; break;
         case DWORD: std::cout << "DWORD" << std::endl; break;
         case PTR: std::cout << "PTR" << std::endl; break;
+        case OFFSET: std::cout << "OFFSET" << std::endl; break;
+        case FLAT: std::cout << "FLAT" << std::endl; break;
         case Colon: std::cout << ":" << std::endl; break;
         case Comma: std::cout << "," << std::endl; break;
         case LBrace: std::cout << "[" << std::endl; break;

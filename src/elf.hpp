@@ -27,6 +27,7 @@ typedef Elf64_Half Elf64_Versym;
 #define ELF64_ST_BIND(val)		ELF32_ST_BIND (val)
 #define ELF64_ST_TYPE(val)		ELF32_ST_TYPE (val)
 #define ELF64_ST_INFO(bind, type)	ELF32_ST_INFO ((bind), (type))
+#define ELF64_R_INFO(sym,type)		((((Elf64_Xword) (sym)) << 32) + (type))
 
 #define STB_LOCAL	0		/* Local symbol */
 #define STB_GLOBAL	1		/* Global symbol */
@@ -130,7 +131,7 @@ public:
     void addDataStr(std::string str);
     void addFunctionSymbol(std::string name, int location, bool isGlobal);
     void addDataSymbol(std::string name, int location);
-    void addDataRef(std::string name);
+    void addDataRef(int codeOffset, int dataOffset);
     void addCode8(uint8_t code);
     void addCode16(uint16_t code);
     void addCode32(uint32_t code);
