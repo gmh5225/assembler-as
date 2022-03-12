@@ -91,9 +91,11 @@ void Parser::buildStdInstr(TokenType op) {
     Token dest = scanner->getNext();
     
     // Build memory destinations
-    if (dest.type == DWORD) {
-        scanner->getNext();     // consume PTR
-        scanner->getNext();     // consume '['
+    if (dest.type == DWORD || dest.type == LBrace) {
+        if (dest.type != LBrace) {
+            scanner->getNext();     // consume PTR
+            scanner->getNext();     // consume '['
+        }
         Token base = scanner->getNext();
         int offset = 1;
         
@@ -114,9 +116,22 @@ void Parser::buildStdInstr(TokenType op) {
             Token src = scanner->getNext();
             
             // Now, encode
-            file->addCode8(0xC7);
-            writeDspOperand(1, base.type, EmptyToken, offset);
-            file->addCode32(src.i32_val);
+            if (src.type == Int32) {
+                file->addCode8(0xC7);
+                writeDspOperand(1, base.type, EmptyToken, offset);
+                file->addCode32(src.i32_val);
+            } else if (isRegister(src.type)) {
+                // Prefixes
+                if (isRegister16(src.type)) file->addCode8(0x66);
+                writeRexPrefix(src.type, EmptyToken);
+                
+                // Encode the opcode
+                if (isRegister8(src.type)) file->addCode8(0x88);
+                else file->addCode8(0x89);
+                
+                // The operand
+                writeDspOperand(1, base.type, src.type, offset);
+            }
         }
         
     // Build register destinations

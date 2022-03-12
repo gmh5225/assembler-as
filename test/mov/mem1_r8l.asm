@@ -8,8 +8,8 @@ _start:
     push rbp
     mov rbp, rsp
     
-    mov ch, 10
-    mov [rbp-1], ch
+    mov al, 10
+    mov [rbp-1], al
     mov di, [rbp-1]
     
     mov eax, 60

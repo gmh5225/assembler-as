@@ -8,9 +8,9 @@ _start:
     push rbp
     mov rbp, rsp
     
-    mov ch, 10
-    mov [rbp-1], ch
-    mov di, [rbp-1]
+    mov ax, 20
+    mov [rbp-2], ax
+    mov di, [rbp-2]
     
     mov eax, 60
     syscall

@@ -126,12 +126,15 @@ void SymbolParser::parseStdInstr(TokenType op) {
     bool isDestExt = false;
     
     switch (token.type) {
+        case LBrace:
         case DWORD: {
-            token = scanner->getNext();
-            token = scanner->getNext();
-            if (token.type != LBrace) {
-                std::cerr << "Error: Expected opening \'[\'." << std::endl;
-                return;
+            if (token.type == DWORD) {
+                token = scanner->getNext();
+                token = scanner->getNext();
+                if (token.type != LBrace) {
+                    std::cerr << "Error: Expected opening \'[\'." << std::endl;
+                    return;
+                }
             }
             
             token = scanner->getNext();
@@ -200,7 +203,10 @@ void SymbolParser::parseStdInstr(TokenType op) {
         case R13d:
         case R14d:
         case R15d: {
-            if (destMemory) break;
+            if (destMemory) {
+                if (isRegisterExt(token.type)) ++location;
+                break;
+            }
             if (regSize != 32) {
                 std::cerr << "Error: Invalid mov. Expected 32-bit destination." << std::endl;
                 return;
@@ -226,7 +232,10 @@ void SymbolParser::parseStdInstr(TokenType op) {
         case R13:
         case R14:
         case R15: {
-            if (destMemory) break;
+            if (destMemory) {
+                ++location;
+                break;
+            }
             if (regSize != 64) {
                 std::cerr << "Error: Invalid mov. Expected 64-bit destination." << std::endl;
                 return;
@@ -271,17 +280,25 @@ void SymbolParser::parseStdInstr(TokenType op) {
         default: {
             // Check for an 8-bit register-register move
             if (isRegister8(token.type)) {
+                if (destMemory) {
+                    if (isRegisterExt(token.type)) ++location;
+                    break;
+                }
                 if (regSize != 8) {
                     std::cerr << "Error: Invalid mov. Expected 8-bit destination." << std::endl;
                     return;
                 }
                 
                 location += 2;
-                if (isDestExt || isRegisterExt(token.type)) ++ location;
+                if (isDestExt || isRegisterExt(token.type)) ++location;
                 
             // Check for a 16-bit register-register move
             } else if (isRegister16(token.type)) {
-                if (destMemory) break;  // TODO: TMP
+                if (destMemory) {
+                    ++location;
+                    if (isRegisterExt(token.type)) ++location;
+                    break;
+                }
                 if (regSize != 16) {
                     std::cerr << "Error: Invalid mov. Expected 16-bit destination." << std::endl;
                     return;
