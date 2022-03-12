@@ -268,9 +268,19 @@ void SymbolParser::parseStdInstr(TokenType op) {
         } break;
         
         default: {
+            // Check for an 8-bit register-register move
+            if (isRegister8(token.type)) {
+                if (regSize != 8) {
+                    std::cerr << "Error: Invalid mov. Expected 8-bit destination." << std::endl;
+                    return;
+                }
+                
+                location += 2;
+                if (isDestExt || isRegisterExt(token.type)) ++ location;
+                
             // Check for a 16-bit register-register move
-            if (isRegister16(token.type)) {
-                if (destMemory) break;
+            } else if (isRegister16(token.type)) {
+                if (destMemory) break;  // TODO: TMP
                 if (regSize != 16) {
                     std::cerr << "Error: Invalid mov. Expected 16-bit destination." << std::endl;
                     return;

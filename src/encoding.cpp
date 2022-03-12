@@ -36,6 +36,8 @@ void Parser::writeAluI(TokenType op, TokenType dest) {
 //
 // Encoding: 4 <64 bit- 0,1> <src extended- 0,1 > 0 <dest extend- 0,1>
 //
+// Note when we are using 8-bit registers:
+// If we are using SPL, BPL, SIL, DIL-> we just need the REX prefix.
 void Parser::writeRexPrefix(TokenType src, TokenType dest) {
     // First, check if prefix is even needed
     // Its not needed IF the registers are not 64-bit and they aren't extended
@@ -50,14 +52,39 @@ void Parser::writeRexPrefix(TokenType src, TokenType dest) {
         output |= 0b00001000;
     }
     
+    /**if (src == Spl || src == Bpl || src == Sil || src == Dil) {
+        if (dest == Spl || dest == Bpl || dest == Sil || dest == Dil) {
+        puts("IN");
+            output = 0x45;
+            file->addCode8(output);
+            return;
+        }
+    }*/
+    
     if (isRegisterExt(src)) {
         output &= 0b11111001;
-        output |= 0b00000100;
+        
+        switch (src) {
+            case Spl:
+            case Bpl:
+            case Sil:
+            case Dil: output |= 0b00000000; break;
+            
+            default: output |= 0b00000100;
+        }
     }
     
     if (isRegisterExt(dest)) {
         output &= 0b11111100;
-        output |= 0b00000001;
+        
+        switch (dest) {
+            case Spl:
+            case Bpl:
+            case Sil:
+            case Dil: output |= 0b00000000; break;
+            
+            default: output |= 0b00000001;
+        }
     }
     
     file->addCode8(output);
@@ -109,34 +136,42 @@ void Parser::writeDspOperand(uint8_t size, TokenType base, TokenType regOffset, 
 
 uint8_t Parser::getRegisterValue(TokenType reg) {
     switch (reg) {
+        case Al: case R8b:
         case Ax: case R8w:
         case Eax: case Rax:
         case R8d: case R8: return 0;
         
+        case Cl: case R9b:
         case Cx: case R9w:
         case Ecx: case Rcx:
         case R9d: case R9: return 1;
         
+        case Dl: case R10b:
         case Dx: case R10w:
         case Edx: case Rdx:
         case R10d: case R10: return 2;
         
+        case Bl: case R11b:
         case Bx: case R11w:
         case Ebx: case Rbx:
         case R11d: case R11: return 3;
         
+        case Ah: case Spl: case R12b:
         case Sp: case R12w:
         case Esp: case Rsp:
         case R12d: case R12: return 4;
         
+        case Ch: case Bpl: case R13b:
         case Bp: case R13w:
         case Ebp: case Rbp:
         case R13d: case R13: return 5;
         
+        case Dh: case Sil: case R14b:
         case Si: case R14w:
         case Esi: case Rsi:
         case R14d: case R14: return 6;
         
+        case Bh: case Dil: case R15b:
         case Di: case R15w:
         case Edi: case Rdi: 
         case R15d: case R15: return 7;
