@@ -8,6 +8,8 @@ fi
 echo "Running all tests..."
 echo ""
 
+total=0
+
 for d in ./test/*; do
     for file in $d/*; do
         echo "`basename $d` `basename $file`"
@@ -36,6 +38,8 @@ for d in ./test/*; do
             if [[ $NM1 == $NM2 ]] ; then
                 echo "Pass"
                 echo ""
+                
+                total=$((total+1))
             else
                 echo "Test failed- symbol check."
                 echo "Expected":
@@ -53,6 +57,9 @@ for d in ./test/*; do
         fi
     done
 done
+
+echo ""
+echo "$total tests passed!"
 
 echo ""
 echo "Done"
