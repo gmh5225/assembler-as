@@ -60,6 +60,14 @@ void SymbolParser::parseText() {
                 location += 1;
             } break;
             
+            // Jumps
+            case Jmp: {
+                //std::cout << "JMP: " << scanner->getLine() << " @ " << location << std::endl;
+                symbols->jumps[scanner->getLine()] = location;
+                location += 2;
+                token = scanner->getNext();
+            } break;
+            
             // ID value- we found a label
             case Id: {
                 std::string name = token.id_val;

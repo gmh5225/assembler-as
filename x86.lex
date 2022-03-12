@@ -8,6 +8,7 @@
 "and" = And
 "or" = Or
 "xor" = Xor
+"jmp" = Jmp
 
 "al" = Al
 "bl" = Bl

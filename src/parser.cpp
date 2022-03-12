@@ -1,3 +1,5 @@
+#include <iostream> // TODO: Remove when done
+
 #include "parser.hpp"
 #include "register.hpp"
 
@@ -33,6 +35,25 @@ void Parser::parseText() {
             case Or:
             case Xor:
             case Mov: buildStdInstr(token.type); break;
+            
+            // Jumps
+            case Jmp: {
+                // Calculate the jump
+                int jmp_location = symbols->jumps[scanner->getLine()];
+                
+                token = scanner->getNext();
+                std::string label = token.id_val;
+                
+                int label_location = symbols->locations[label];
+                int destination = label_location - jmp_location - 2;
+                
+                //std::cout << "JMP: " << jmp_location << " | LBL: " << label_location << std::endl;
+                //printf("DEST: %d <%x>\n", destination, destination);
+                
+                // Encode
+                file->addCode8(0xEB);
+                file->addCode8(destination);
+            } break;
             
             // Simple instructions
             case Syscall: {

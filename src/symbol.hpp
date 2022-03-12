@@ -10,6 +10,7 @@
 struct Symbols {
     std::map<std::string, int> locations;
     std::vector<std::string> global;
+    std::map<int, int> jumps;
 };
 
 class SymbolParser {

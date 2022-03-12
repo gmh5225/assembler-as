@@ -18,6 +18,7 @@ enum TokenType {
     And,
     Or,
     Xor,
+    Jmp,
     Al,
     Bl,
     Cl,

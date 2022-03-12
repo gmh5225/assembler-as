@@ -16,6 +16,7 @@ void Token::print() {
         case And: std::cout << "and" << std::endl; break;
         case Or: std::cout << "or" << std::endl; break;
         case Xor: std::cout << "xor" << std::endl; break;
+        case Jmp: std::cout << "jmp" << std::endl; break;
         case Al: std::cout << "al" << std::endl; break;
         case Bl: std::cout << "bl" << std::endl; break;
         case Cl: std::cout << "cl" << std::endl; break;

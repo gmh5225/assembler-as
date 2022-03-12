@@ -197,6 +197,7 @@ TokenType Scanner::getKeyword() {
     else if (buffer == "and") return And;
     else if (buffer == "or") return Or;
     else if (buffer == "xor") return Xor;
+    else if (buffer == "jmp") return Jmp;
     else if (buffer == "al") return Al;
     else if (buffer == "bl") return Bl;
     else if (buffer == "cl") return Cl;
