@@ -3,7 +3,7 @@ CFLAGS=-g
 SRC=$(wildcard src/*.cpp)
 OBJS=$(addprefix build/,$(patsubst %.cpp, %.o, $(SRC)))
 
-all: check lex as
+all: check lex as lib_test
 
 .PHONY: check
 check:
@@ -19,9 +19,14 @@ as: $(OBJS)
 	
 build/src/%.o: src/%.cpp
 	$(CXX) $(CFLAGS) -c $< -o $@
+	
+.PHONY: lib_test
+lib_test:
+	as lib_test.asm -o build/lib_test.o
 
 .PHONY: clean	
 clean:
 	rm build/as; \
+	rm build/*.o; \
 	rm build/src/*.o
 	

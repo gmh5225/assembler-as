@@ -30,9 +30,15 @@ Symbols *SymbolParser::getSymbols() {
 void SymbolParser::processSymbols(Elf64File *file) {
     for (auto const &x : symbols->locations) {
         bool isGlobal = false;
-        if (std::find(symbols->global.begin(), symbols->global.end(), x.first) != symbols->global.end())
+        if (std::find(symbols->global.begin(), symbols->global.end(), x.first) != symbols->global.end()) {
             isGlobal = true;
-        file->addFunctionSymbol(x.first, x.second, isGlobal);
+        }
+        file->addFunctionSymbol(x.first, x.second, isGlobal, false);
+    }
+    
+    // Add extern symbols
+    for (auto func : symbols->externs) {
+        file->addFunctionSymbol(func, 0, true, true);
     }
     
     // Add .data string values
@@ -48,6 +54,10 @@ void SymbolParser::processSymbols(Elf64File *file) {
     // Add .rela.text values
     for (auto pair : symbols->rela_locations) {
         file->addDataRef(pair.first, pair.second);
+    }
+    
+    for (auto pair : symbols->calls) {
+        file->addTextRef(pair.first, pair.second);
     }
 }
 
@@ -111,6 +121,7 @@ void SymbolParser::parseText() {
             case Syscall: location += 2; break;
             case Ret: location += 1; break;
             
+            // Other instructions
             case Push: {
                 token = scanner->getNext();
                 if (getRegSize(token.type) != 64) {
@@ -127,6 +138,30 @@ void SymbolParser::parseText() {
                 symbols->jumps[scanner->getLine()] = location;
                 location += 2;
                 token = scanner->getNext();
+            } break;
+            
+            // Calls
+            case Call: {
+                token = scanner->getNext();
+                if (token.type != Id) {
+                    std::cerr << "Error: Expected name after call." << std::endl;
+                    return;
+                }
+                
+                symbols->calls.push_back(std::pair<int, std::string>(location + 1, token.id_val));
+                location += 5;
+            } break;
+            
+            // .extern value
+            case Extern: {
+                token = scanner->getNext();
+                std::string name = token.id_val;
+                if (token.type != Id) {
+                    std::cerr << "Error: Expected name after extern." << std::endl;
+                    return;
+                }
+                
+                symbols->externs.push_back(name);
             } break;
             
             // ID value- we found a label

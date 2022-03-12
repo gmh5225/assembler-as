@@ -262,16 +262,20 @@ void Elf64File::write() {
     fclose(file);
 }
 
-void Elf64File::addFunctionSymbol(std::string name, int location, bool isGlobal) {
+void Elf64File::addFunctionSymbol(std::string name, int location, bool isGlobal, bool isExtern) {
     strtab->table.push_back(name);
     int pos = getStringPos(name);
     
     Elf64_Sym *symbol = new Elf64_Sym;
     symbol->st_name = pos;
+    symbol->st_value = Elf64_Addr(location);
+    
     if (isGlobal) symbol->st_info = ELF64_ST_INFO(STB_GLOBAL, STT_NOTYPE);
     else symbol->st_info = ELF64_ST_INFO(STB_LOCAL, STT_NOTYPE);
-    symbol->st_shndx = text->index;
-    symbol->st_value = Elf64_Addr(location);
+    
+    if (isExtern) symbol->st_shndx = 0;
+    else symbol->st_shndx = text->index;
+    
     symtab->symbols.push_back(symbol);
 }
 
@@ -292,6 +296,23 @@ void Elf64File::addDataRef(int codeOffset, int dataOffset) {
     rela->r_offset = codeOffset;
     rela->r_info = ELF64_R_INFO(2, 1);
     rela->r_addend = dataOffset;
+    rela_text->symbols.push_back(rela);
+}
+
+void Elf64File::addTextRef(int codeOffset, std::string name) {
+    // Find the position
+    int namePos = getStringPos(name);
+    int pos = 0;
+    for (auto sym : symtab->symbols) {
+        if (sym->st_name == namePos) break;
+        ++pos;
+    }
+    
+    // Build the symbol
+    Elf64_Rela *rela = new Elf64_Rela;
+    rela->r_offset = codeOffset;
+    rela->r_info = ELF64_R_INFO(pos, 2);
+    rela->r_addend = -4;
     rela_text->symbols.push_back(rela);
 }
 

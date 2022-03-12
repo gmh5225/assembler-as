@@ -9,6 +9,7 @@
 "or" = Or
 "xor" = Xor
 "jmp" = Jmp
+"call" = Call
 
 "al" = Al
 "bl" = Bl
@@ -87,6 +88,8 @@
 "PTR" = PTR
 "OFFSET" = OFFSET
 "FLAT" = FLAT
+
+".extern" = Extern
 
 ':' = Colon
 ',' = Comma

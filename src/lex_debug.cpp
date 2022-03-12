@@ -17,6 +17,7 @@ void Token::print() {
         case Or: std::cout << "or" << std::endl; break;
         case Xor: std::cout << "xor" << std::endl; break;
         case Jmp: std::cout << "jmp" << std::endl; break;
+        case Call: std::cout << "call" << std::endl; break;
         case Al: std::cout << "al" << std::endl; break;
         case Bl: std::cout << "bl" << std::endl; break;
         case Cl: std::cout << "cl" << std::endl; break;
@@ -89,6 +90,7 @@ void Token::print() {
         case PTR: std::cout << "PTR" << std::endl; break;
         case OFFSET: std::cout << "OFFSET" << std::endl; break;
         case FLAT: std::cout << "FLAT" << std::endl; break;
+        case Extern: std::cout << ".extern" << std::endl; break;
         case Colon: std::cout << ":" << std::endl; break;
         case Comma: std::cout << "," << std::endl; break;
         case LBrace: std::cout << "[" << std::endl; break;

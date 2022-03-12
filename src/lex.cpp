@@ -205,6 +205,7 @@ TokenType Scanner::getKeyword() {
     else if (buffer == "or") return Or;
     else if (buffer == "xor") return Xor;
     else if (buffer == "jmp") return Jmp;
+    else if (buffer == "call") return Call;
     else if (buffer == "al") return Al;
     else if (buffer == "bl") return Bl;
     else if (buffer == "cl") return Cl;
@@ -277,6 +278,7 @@ TokenType Scanner::getKeyword() {
     else if (buffer == "PTR") return PTR;
     else if (buffer == "OFFSET") return OFFSET;
     else if (buffer == "FLAT") return FLAT;
+    else if (buffer == ".extern") return Extern;
     return EmptyToken;
 }
 

@@ -55,6 +55,14 @@ void Parser::parseText() {
                 file->addCode8(destination);
             } break;
             
+            // Calls
+            case Call: {
+                scanner->getNext();     // Consume function name
+                
+                file->addCode8(0xE8);
+                file->addCode32(0);
+            } break;
+            
             // Simple instructions
             case Syscall: {
                 file->addCode8(0x0F);
