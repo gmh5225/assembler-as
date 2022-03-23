@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "lex.hpp"
-#include "elf.hpp"
+#include <libelf/elf.hpp>
 
 struct Symbols {
     std::map<std::string, int> locations;

@@ -3,7 +3,7 @@
 #include <string>
 
 #include "lex.hpp"
-#include "elf.hpp"
+#include <libelf/elf.hpp>
 #include "symbol.hpp"
 
 class Parser {

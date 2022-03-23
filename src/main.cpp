@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "elf.hpp"
+#include <libelf/elf.hpp>
 #include "symbol.hpp"
 #include "parser.hpp"
 
