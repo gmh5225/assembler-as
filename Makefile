@@ -42,6 +42,10 @@ build/src/%.o: src/%.cpp
 .PHONY: lib_test
 lib_test:
 	as lib_test.asm -o build/lib_test.o
+	
+.PHONY: test
+test:
+	./test.sh
 
 .PHONY: clean	
 clean:
