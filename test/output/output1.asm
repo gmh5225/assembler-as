@@ -19,6 +19,7 @@ _start:
     syscall
     
     mov eax, 60
+    mov edi, 0
     syscall
 done:
     ret

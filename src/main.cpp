@@ -16,8 +16,6 @@ int main(int argc, char *argv[]) {
 
     Elf64File *file = new Elf64File(output);
     
-    
-    
     // Test out our symbol parser
     SymbolParser symparse(input);
     Symbols *symbols = symparse.getSymbols();

@@ -294,7 +294,8 @@ void Elf64File::addDataSymbol(std::string name, int location) {
 void Elf64File::addDataRef(int codeOffset, int dataOffset) {
     Elf64_Rela *rela = new Elf64_Rela;
     rela->r_offset = codeOffset;
-    rela->r_info = ELF64_R_INFO(2, 1);
+    //rela->r_info = ELF64_R_INFO(2, 1);        // 1 = x86_64_64
+    rela->r_info = ELF64_R_INFO(2, 11);         // 11 = x86_64_32S
     rela->r_addend = dataOffset;
     rela_text->symbols.push_back(rela);
 }

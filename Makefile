@@ -6,7 +6,8 @@ OBJS=$(addprefix build/,$(patsubst %.cpp, %.o, $(SRC)))
 ELF_SRC=$(wildcard libelf/*.cpp)
 ELF_OBJS=$(addprefix build/,$(patsubst %.cpp, %.o, $(ELF_SRC)))
 
-all: check lex libelf as lib_test
+#all: check lex libelf as lib_test
+all: check libelf as lib_test
 
 .PHONY: check
 check:
@@ -14,9 +15,9 @@ check:
 	if [ ! -d ./build/libelf ]; then mkdir -p build/libelf; fi
 	if [ ! -d ./build/src ] ; then mkdir -p build/src; fi
 	
-.PHONY: lex
-lex:
-	minilex x86.lex ./src
+#.PHONY: lex
+#lex:
+#	minilex x86.lex ./src
 
 ##
 ## libelf
