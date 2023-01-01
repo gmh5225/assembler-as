@@ -127,8 +127,12 @@ void Parser::writeDspOperand(uint8_t size, TokenType base, TokenType regOffset, 
     
     uint8_t output = 0;
     
+    if (offset != 0) {
     output &= 0b00111111;
     output |= (size << 6);
+    } else {
+        output = 0x3F;
+    }
     
     output &= 0b11000111;
     output |= (offsetReg << 3);
@@ -137,7 +141,10 @@ void Parser::writeDspOperand(uint8_t size, TokenType base, TokenType regOffset, 
     output |= baseReg;
     
     file->addCode8(output);
-    file->addCode8((int8_t)offset);
+    if (base == Rsp) file->addCode8(0x24);
+    if (offset != 0) {
+        file->addCode8((int8_t)offset);
+    }
 }
 
 uint8_t Parser::getRegisterValue(TokenType reg) {

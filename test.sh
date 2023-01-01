@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ ! -f ./build/as ]]; then
+if [[ ! -f ./build/src/asx86 ]]; then
     echo "Error: No assembler built!"
     exit 1
 fi
@@ -16,10 +16,11 @@ for d in ./test/*; do
         
         OBJS=""
         if [[ `basename $d` == "extern" ]] ; then
+            as lib_test.asm -o build/lib_test.o
             OBJS="build/lib_test.o"
         fi
         
-        build/as $file
+        build/src/asx86 $file
         ld a.out $OBJS -o out
         
         as $file -o test.out

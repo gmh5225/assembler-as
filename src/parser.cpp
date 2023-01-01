@@ -34,7 +34,8 @@ void Parser::parseText() {
             case And:
             case Or:
             case Xor:
-            case Mov: buildStdInstr(token.type); break;
+            case Mov:
+            case Lea: buildStdInstr(token.type); break;
             
             // Jumps
             case Jmp: {
@@ -201,12 +202,42 @@ void Parser::buildStdInstr(TokenType op) {
                     writeRexPrefix(dest.type, EmptyToken);
                     
                     // Opcode
-                    if (isRegister8(dest.type)) file->addCode8(0x8A);
-                    else file->addCode8(0x8B);
+                    if (op == Mov) {
+                        if (isRegister8(dest.type)) file->addCode8(0x8A);
+                        else file->addCode8(0x8B);
+                    } else if (op == Lea) {
+                        file->addCode8(0x8D);
+                    }
                     
                     // Operand
                     writeDspOperand(1, base.type, dest.type, offset);
                 }
+            } break;
+            
+            // TODO: Merge with above
+            case DWORD: {
+                Token token = scanner->getNext();       // Consume PTR
+                token = scanner->getNext();             // Consume '['
+                Token base = scanner->getNext();     // Get the register
+                token = scanner->getNext();             // Consume the operator
+                Token offset = scanner->getNext();      // Get the integer
+                token = scanner->getNext();             // Get the ']'
+                
+                // Prefixes
+                if (isRegister16(src.type)) file->addCode8(0x66);
+                writeRexPrefix(src.type, EmptyToken);
+                
+                // Encode the opcode
+                if (op == Mov) {
+                    //if (isRegister8(src.type)) file->addCode8(0x88);
+                    //else file->addCode8(0x89);
+                    file->addCode8(0x8B);
+                } else if (op == Lea) {
+                    file->addCode8(0x8D);
+                }
+                
+                // The operand
+                writeDspOperand(1, base.type, dest.type, offset.i32_val);
             } break;
             
             default: {

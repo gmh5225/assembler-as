@@ -196,6 +196,7 @@ bool Scanner::isSymbol(char c) {
 TokenType Scanner::getKeyword() {
     //if (buffer == "extern") return Extern;
     if (buffer == "mov") return Mov;
+    else if (buffer == "lea") return Lea;
     else if (buffer == "syscall") return Syscall;
     else if (buffer == "ret") return Ret;
     else if (buffer == "push") return Push;

@@ -115,7 +115,8 @@ void SymbolParser::parseText() {
             case And:
             case Or:
             case Xor:
-            case Mov: parseStdInstr(token.type); break;
+            case Mov:
+            case Lea: parseStdInstr(token.type); break;
             
             // Instructions where we know the size right off
             case Syscall: location += 2; break;
@@ -400,6 +401,18 @@ void SymbolParser::parseStdInstr(TokenType op) {
             // Update the symbol table
             int symbolLocation = symbols->data_locations[token.id_val];
             symbols->rela_locations.push_back(std::pair<int,int>(labelLocation, symbolLocation));
+        } break;
+        
+        // DWORD
+        case DWORD: {
+            token = scanner->getNext();     // PTR
+            token = scanner->getNext();     // [
+            token = scanner->getNext();     // <base register>
+            token = scanner->getNext();     // +/-
+            token = scanner->getNext();     // <offset>
+            token = scanner->getNext();     // ]
+            
+            location += 3;
         } break;
         
         default: {

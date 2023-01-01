@@ -10,6 +10,7 @@ enum TokenType {
     Eof,
     
     Mov,
+    Lea,
     Syscall,
     Ret,
     Push,
