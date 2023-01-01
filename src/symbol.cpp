@@ -363,7 +363,13 @@ void SymbolParser::parseStdInstr(TokenType op) {
         
         case LBrace: {
             token = scanner->getNext();
-            while (token.type != RBrace) token = scanner->getNext();
+            int offset = 0;
+            while (token.type != RBrace) {
+                if (token.type == Int32) {
+                    offset = token.i32_val;
+                }
+                token = scanner->getNext();
+            }
             
             // TODO: Update accordingly
             if (regSize == 8) location += 3;
@@ -372,6 +378,10 @@ void SymbolParser::parseStdInstr(TokenType op) {
             else if (regSize == 64) location += 4;
             
             if (isDestExt && regSize != 64) ++location;
+            
+            if (op == Lea) ++location;
+            
+            if (offset == 0) --location;
         } break;
         
         // .data references

@@ -308,13 +308,16 @@ void Elf64File::addTextRef(int codeOffset, std::string name) {
         if (sym->st_name == namePos) break;
         ++pos;
     }
+    if ((pos + 1) < symtab->symbols.size()) {
+        pos += 1;
+    }
     
     // Build the symbol
     Elf64_Rela *rela = new Elf64_Rela;
     rela->r_offset = codeOffset;
     //rela->r_info = ELF64_R_INFO(pos, 2);
     //rela->r_info = ELF64_R_INFO(2, 4);
-    rela->r_info = ELF64_R_INFO(6, 4);
+    rela->r_info = ELF64_R_INFO(pos, 4);
     rela->r_addend = -4;
     rela_text->symbols.push_back(rela);
 }
